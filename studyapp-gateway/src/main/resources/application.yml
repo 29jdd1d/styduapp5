@@ -1,0 +1,110 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: studyapp-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        namespace: public
+      config:
+        server-addr: localhost:8848
+        namespace: public
+        file-extension: yml
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOriginPatterns: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+            allowCredentials: true
+            maxAge: 3600
+      routes:
+        # 认证服务
+        - id: studyapp-auth
+          uri: lb://studyapp-auth
+          predicates:
+            - Path=/api/auth/**
+          filters:
+            - StripPrefix=1
+
+        # 用户服务
+        - id: studyapp-user
+          uri: lb://studyapp-user
+          predicates:
+            - Path=/api/user/**
+          filters:
+            - StripPrefix=1
+
+        # 题库服务
+        - id: studyapp-question
+          uri: lb://studyapp-question
+          predicates:
+            - Path=/api/question/**
+          filters:
+            - StripPrefix=1
+
+        # 课程服务
+        - id: studyapp-course
+          uri: lb://studyapp-course
+          predicates:
+            - Path=/api/course/**
+          filters:
+            - StripPrefix=1
+
+        # 刷题服务
+        - id: studyapp-practice
+          uri: lb://studyapp-practice
+          predicates:
+            - Path=/api/practice/**
+          filters:
+            - StripPrefix=1
+
+        # 打卡服务
+        - id: studyapp-checkin
+          uri: lb://studyapp-checkin
+          predicates:
+            - Path=/api/checkin/**
+          filters:
+            - StripPrefix=1
+
+        # 社区服务
+        - id: studyapp-community
+          uri: lb://studyapp-community
+          predicates:
+            - Path=/api/community/**
+          filters:
+            - StripPrefix=1
+
+        # 管理后台服务
+        - id: studyapp-admin
+          uri: lb://studyapp-admin
+          predicates:
+            - Path=/api/admin/**
+          filters:
+            - StripPrefix=1
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      database: 0
+
+# 白名单配置（不需要登录的接口）
+gateway:
+  white-list:
+    - /api/auth/wx/login
+    - /api/auth/admin/login
+    - /api/user/major/list
+    - /api/question/category/tree
+    - /api/course/list
+    - /api/course/detail/**
+    - /api/community/post/list
+    - /api/community/post/detail/**
+
+logging:
+  level:
+    com.studyapp: debug

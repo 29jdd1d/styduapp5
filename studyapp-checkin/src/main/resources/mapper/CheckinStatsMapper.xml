@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.studyapp.checkin.mapper.CheckinStatsMapper">
+
+    <select id="selectStreakRanking" resultType="com.studyapp.checkin.entity.CheckinStats">
+        SELECT * FROM checkin_stats
+        ORDER BY current_streak DESC
+        LIMIT #{limit}
+    </select>
+
+    <select id="selectTotalDaysRanking" resultType="com.studyapp.checkin.entity.CheckinStats">
+        SELECT * FROM checkin_stats
+        ORDER BY total_days DESC
+        LIMIT #{limit}
+    </select>
+
+</mapper>

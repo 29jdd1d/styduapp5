@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.studyapp.question.mapper.QuestionCategoryMapper">
+
+    <!-- 更新题目数量 -->
+    <update id="updateQuestionCount">
+        UPDATE question_category SET question_count = #{count}, update_time = NOW() WHERE id = #{categoryId}
+    </update>
+
+</mapper>
