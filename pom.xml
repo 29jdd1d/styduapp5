@@ -127,6 +127,13 @@
                 <version>${cos.version}</version>
             </dependency>
 
+            <!-- Spring Cloud Bootstrap (Spring Boot 3.x 需要显式引入) -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-bootstrap</artifactId>
+                <version>4.1.0</version>
+            </dependency>
+
             <!-- 公共模块 -->
             <dependency>
                 <groupId>com.studyapp</groupId>

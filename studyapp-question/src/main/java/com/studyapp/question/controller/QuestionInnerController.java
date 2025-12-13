@@ -29,8 +29,8 @@ public class QuestionInnerController {
     }
 
     @Operation(summary = "获取题目详情")
-    @GetMapping("/detail/{id}")
-    public Result<QuestionDetailResponse> getDetail(@PathVariable Long id) {
+    @GetMapping("/detail")
+    public Result<QuestionDetailResponse> getDetail(@RequestParam Long id) {
         return Result.success(questionService.getQuestionDetail(id));
     }
 

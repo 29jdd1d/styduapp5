@@ -24,6 +24,11 @@ public class Major extends BaseEntity {
     private String code;
 
     /**
+     * 学科门类
+     */
+    private String category;
+
+    /**
      * 图标
      */
     private String icon;

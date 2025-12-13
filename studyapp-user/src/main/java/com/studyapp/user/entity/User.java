@@ -19,6 +19,11 @@ public class User extends BaseEntity {
     private String openid;
 
     /**
+     * 微信unionid
+     */
+    private String unionid;
+
+    /**
      * 昵称
      */
     private String nickname;

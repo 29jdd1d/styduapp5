@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -62,8 +63,26 @@ public class UserInnerController {
     @Operation(summary = "根据ID获取用户信息")
     @GetMapping("/getById")
     public Result<Map<String, Object>> getById(@RequestParam Long userId) {
-        User user = userService.getByOpenid(null);
-        // 这里需要修改为按ID查询
-        return Result.success(null);
+        User user = userService.getById(userId);
+        if (user == null) {
+            return Result.success(null);
+        }
+        return Result.success(userService.getUserInfoMap(user));
+    }
+
+    @Operation(summary = "获取用户基本信息（供其他服务调用）")
+    @GetMapping("/info")
+    public Result<Map<String, Object>> getUserInfo(@RequestParam Long userId) {
+        User user = userService.getById(userId);
+        if (user == null) {
+            return Result.success(null);
+        }
+        return Result.success(userService.getUserInfoMap(user));
+    }
+
+    @Operation(summary = "批量获取用户信息")
+    @GetMapping("/batch")
+    public Result<List<Map<String, Object>>> getBatchUserInfo(@RequestParam List<Long> userIds) {
+        return Result.success(userService.getBatchUserInfoMap(userIds));
     }
 }

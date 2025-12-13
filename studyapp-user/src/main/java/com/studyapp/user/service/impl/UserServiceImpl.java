@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,6 +87,11 @@ public class UserServiceImpl implements UserService {
                 new LambdaQueryWrapper<User>()
                         .eq(User::getOpenid, openid)
         );
+    }
+
+    @Override
+    public User getById(Long userId) {
+        return userMapper.selectById(userId);
     }
 
     @Override
@@ -167,5 +173,16 @@ public class UserServiceImpl implements UserService {
         }
 
         return map;
+    }
+
+    @Override
+    public List<Map<String, Object>> getBatchUserInfoMap(List<Long> userIds) {
+        if (userIds == null || userIds.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<User> users = userMapper.selectBatchIds(userIds);
+        return users.stream()
+                .map(this::getUserInfoMap)
+                .collect(Collectors.toList());
     }
 }

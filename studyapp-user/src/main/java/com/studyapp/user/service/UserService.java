@@ -29,6 +29,11 @@ public interface UserService {
     User getByOpenid(String openid);
 
     /**
+     * 根据ID获取用户
+     */
+    User getById(Long userId);
+
+    /**
      * 创建用户
      */
     User createUser(String openid, String nickname, String avatar);
@@ -57,4 +62,9 @@ public interface UserService {
      * 获取用户信息（Map格式，供Feign调用）
      */
     Map<String, Object> getUserInfoMap(User user);
+
+    /**
+     * 批量获取用户信息（Map格式，供Feign调用）
+     */
+    List<Map<String, Object>> getBatchUserInfoMap(List<Long> userIds);
 }
