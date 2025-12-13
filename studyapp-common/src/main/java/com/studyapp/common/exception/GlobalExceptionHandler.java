@@ -8,6 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 /**
  * 全局异常处理
@@ -50,6 +51,15 @@ public class GlobalExceptionHandler {
                 .orElse("参数绑定失败");
         log.warn("参数绑定异常: {}", message);
         return Result.error(ResultCode.PARAM_ERROR.getCode(), message);
+    }
+
+    /**
+     * 静态资源未找到异常（如 favicon.ico）
+     */
+    @ExceptionHandler(NoResourceFoundException.class)
+    public Result<Void> handleNoResourceFoundException(NoResourceFoundException e) {
+        // 不打印日志，避免刷屏
+        return Result.error(404, "资源不存在");
     }
 
     /**

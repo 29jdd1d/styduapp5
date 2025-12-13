@@ -24,14 +24,15 @@ mybatis-plus:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
-# Knife4j配置
+# Swagger UI 配置
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
+    enabled: true
+  api-docs:
+    enabled: true
 knife4j:
-  enable: true
-  setting:
-    language: zh_CN
+  enable: false
 
 logging:
   level:

@@ -14,18 +14,15 @@ wx:
     app-id: your-app-id
     app-secret: your-app-secret
 
-# Knife4j配置
+# Swagger UI 配置
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
-    tags-sorter: alpha
-    operations-sorter: alpha
+    enabled: true
   api-docs:
-    path: /v3/api-docs
+    enabled: true
 knife4j:
-  enable: true
-  setting:
-    language: zh_CN
+  enable: false
 
 logging:
   level:

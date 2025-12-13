@@ -26,18 +26,15 @@ mybatis-plus:
 
 # 腾讯云COS配置 - 从Nacos共享配置获取 (studyapp-cos.yml)
 
-# Knife4j配置
+# Swagger UI 配置
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
-    tags-sorter: alpha
-    operations-sorter: alpha
+    enabled: true
   api-docs:
-    path: /v3/api-docs
+    enabled: true
 knife4j:
-  enable: true
-  setting:
-    language: zh_CN
+  enable: false
 
 logging:
   level:

@@ -29,14 +29,17 @@ jwt:
   secret: studyapp-admin-jwt-secret-key-2024-very-long-string
   expiration: 86400000
 
-# Knife4j配置
+# Swagger UI 配置
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
+    enabled: true
+  api-docs:
+    enabled: true
+
+# 禁用 Knife4j（使用原生 Swagger UI）
 knife4j:
-  enable: true
-  setting:
-    language: zh_CN
+  enable: false
 
 logging:
   level:

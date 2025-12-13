@@ -68,6 +68,9 @@ public class AdminAuthServiceImpl implements AdminAuthService {
 
     @Override
     public AdminLoginResponse getCurrentAdmin(Long adminId) {
+        if (adminId == null) {
+            throw new BusinessException(401, "未登录或Token已过期");
+        }
         AdminUser admin = adminUserMapper.selectById(adminId);
         if (admin == null) {
             throw new BusinessException("管理员不存在");
@@ -85,6 +88,9 @@ public class AdminAuthServiceImpl implements AdminAuthService {
     @Override
     @Transactional
     public void changePassword(Long adminId, String oldPassword, String newPassword) {
+        if (adminId == null) {
+            throw new BusinessException(401, "未登录或Token已过期");
+        }
         AdminUser admin = adminUserMapper.selectById(adminId);
         if (admin == null) {
             throw new BusinessException("管理员不存在");

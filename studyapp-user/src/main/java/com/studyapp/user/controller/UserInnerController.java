@@ -24,7 +24,7 @@ public class UserInnerController {
 
     @Operation(summary = "根据openid获取用户")
     @GetMapping("/getByOpenid")
-    public Result<Map<String, Object>> getByOpenid(@RequestParam String openid) {
+    public Result<Map<String, Object>> getByOpenid(@RequestParam(name = "openid") String openid) {
         User user = userService.getByOpenid(openid);
         if (user == null) {
             return Result.success(null);
@@ -35,9 +35,9 @@ public class UserInnerController {
     @Operation(summary = "创建用户")
     @PostMapping("/create")
     public Result<Map<String, Object>> createUser(
-            @RequestParam String openid,
-            @RequestParam(required = false) String nickname,
-            @RequestParam(required = false) String avatar
+            @RequestParam(name = "openid") String openid,
+            @RequestParam(name = "nickname", required = false) String nickname,
+            @RequestParam(name = "avatar", required = false) String avatar
     ) {
         User user = userService.createUser(openid, nickname, avatar);
         return Result.success(userService.getUserInfoMap(user));
@@ -45,7 +45,7 @@ public class UserInnerController {
 
     @Operation(summary = "增加学习天数")
     @PostMapping("/incrementStudyDays")
-    public Result<Void> incrementStudyDays(@RequestParam Long userId) {
+    public Result<Void> incrementStudyDays(@RequestParam(name = "userId") Long userId) {
         userService.incrementStudyDays(userId);
         return Result.success();
     }
@@ -53,8 +53,8 @@ public class UserInnerController {
     @Operation(summary = "增加做题数")
     @PostMapping("/incrementTotalQuestions")
     public Result<Void> incrementTotalQuestions(
-            @RequestParam Long userId,
-            @RequestParam Integer count
+            @RequestParam(name = "userId") Long userId,
+            @RequestParam(name = "count") Integer count
     ) {
         userService.incrementTotalQuestions(userId, count);
         return Result.success();
@@ -62,7 +62,7 @@ public class UserInnerController {
 
     @Operation(summary = "根据ID获取用户信息")
     @GetMapping("/getById")
-    public Result<Map<String, Object>> getById(@RequestParam Long userId) {
+    public Result<Map<String, Object>> getById(@RequestParam(name = "userId") Long userId) {
         User user = userService.getById(userId);
         if (user == null) {
             return Result.success(null);
@@ -72,7 +72,7 @@ public class UserInnerController {
 
     @Operation(summary = "获取用户基本信息（供其他服务调用）")
     @GetMapping("/info")
-    public Result<Map<String, Object>> getUserInfo(@RequestParam Long userId) {
+    public Result<Map<String, Object>> getUserInfo(@RequestParam(name = "userId") Long userId) {
         User user = userService.getById(userId);
         if (user == null) {
             return Result.success(null);
@@ -82,7 +82,7 @@ public class UserInnerController {
 
     @Operation(summary = "批量获取用户信息")
     @GetMapping("/batch")
-    public Result<List<Map<String, Object>>> getBatchUserInfo(@RequestParam List<Long> userIds) {
+    public Result<List<Map<String, Object>>> getBatchUserInfo(@RequestParam(name = "userIds") List<Long> userIds) {
         return Result.success(userService.getBatchUserInfoMap(userIds));
     }
 

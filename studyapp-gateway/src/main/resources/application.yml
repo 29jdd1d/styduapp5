@@ -87,7 +87,7 @@ spring:
 gateway:
   white-list:
     - /api/auth/wx/login
-    - /api/auth/admin/login
+    - /api/admin/auth/login
     - /api/user/major/list
     - /api/question/category/tree
     - /api/course/list
