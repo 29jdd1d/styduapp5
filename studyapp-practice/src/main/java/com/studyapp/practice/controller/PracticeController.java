@@ -55,7 +55,7 @@ public class PracticeController {
     @PostMapping("/finish/{recordId}")
     public Result<PracticeResultResponse> finishPractice(
             @Parameter(description = "练习记录ID", required = true, example = "1")
-            @PathVariable Long recordId) {
+            @PathVariable(name = "recordId") Long recordId) {
         Long userId = UserContext.getUserId();
         return Result.success(practiceService.finishPractice(userId, recordId));
     }
@@ -67,9 +67,9 @@ public class PracticeController {
     @GetMapping("/records")
     public Result<PageResult<PracticeResultResponse>> getPracticeRecords(
             @Parameter(description = "页码，从1开始", example = "1")
-            @RequestParam(defaultValue = "1") Integer pageNum,
+            @RequestParam(name = "pageNum", defaultValue = "1") Integer pageNum,
             @Parameter(description = "每页数量，默认10条", example = "10")
-            @RequestParam(defaultValue = "10") Integer pageSize) {
+            @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
         Long userId = UserContext.getUserId();
         return Result.success(practiceService.getPracticeRecords(userId, pageNum, pageSize));
     }
@@ -81,9 +81,9 @@ public class PracticeController {
     @GetMapping("/wrong")
     public Result<PageResult<WrongQuestionResponse>> getWrongQuestions(
             @Parameter(description = "页码，从1开始", example = "1")
-            @RequestParam(defaultValue = "1") Integer pageNum,
+            @RequestParam(name = "pageNum", defaultValue = "1") Integer pageNum,
             @Parameter(description = "每页数量，默认10条", example = "10")
-            @RequestParam(defaultValue = "10") Integer pageSize) {
+            @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
         Long userId = UserContext.getUserId();
         return Result.success(practiceService.getWrongQuestions(userId, pageNum, pageSize));
     }
@@ -95,7 +95,7 @@ public class PracticeController {
     @PostMapping("/wrong/remove/{questionId}")
     public Result<Void> removeWrongQuestion(
             @Parameter(description = "要移除的题目ID", required = true, example = "1")
-            @PathVariable Long questionId) {
+            @PathVariable(name = "questionId") Long questionId) {
         Long userId = UserContext.getUserId();
         practiceService.removeWrongQuestion(userId, questionId);
         return Result.success();
@@ -108,7 +108,7 @@ public class PracticeController {
     @PostMapping("/favorite/{questionId}")
     public Result<Void> favoriteQuestion(
             @Parameter(description = "要收藏的题目ID", required = true, example = "1")
-            @PathVariable Long questionId) {
+            @PathVariable(name = "questionId") Long questionId) {
         Long userId = UserContext.getUserId();
         practiceService.favoriteQuestion(userId, questionId);
         return Result.success();
@@ -121,7 +121,7 @@ public class PracticeController {
     @DeleteMapping("/favorite/{questionId}")
     public Result<Void> unfavoriteQuestion(
             @Parameter(description = "要取消收藏的题目ID", required = true, example = "1")
-            @PathVariable Long questionId) {
+            @PathVariable(name = "questionId") Long questionId) {
         Long userId = UserContext.getUserId();
         practiceService.unfavoriteQuestion(userId, questionId);
         return Result.success();
@@ -134,9 +134,9 @@ public class PracticeController {
     @GetMapping("/favorite")
     public Result<PageResult<WrongQuestionResponse>> getFavoriteQuestions(
             @Parameter(description = "页码，从1开始", example = "1")
-            @RequestParam(defaultValue = "1") Integer pageNum,
+            @RequestParam(name = "pageNum", defaultValue = "1") Integer pageNum,
             @Parameter(description = "每页数量，默认10条", example = "10")
-            @RequestParam(defaultValue = "10") Integer pageSize) {
+            @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
         Long userId = UserContext.getUserId();
         return Result.success(practiceService.getFavoriteQuestions(userId, pageNum, pageSize));
     }
@@ -148,7 +148,7 @@ public class PracticeController {
     @GetMapping("/favorite/check/{questionId}")
     public Result<Boolean> isFavorite(
             @Parameter(description = "要检查的题目ID", required = true, example = "1")
-            @PathVariable Long questionId) {
+            @PathVariable(name = "questionId") Long questionId) {
         Long userId = UserContext.getUserId();
         return Result.success(practiceService.isFavorite(userId, questionId));
     }

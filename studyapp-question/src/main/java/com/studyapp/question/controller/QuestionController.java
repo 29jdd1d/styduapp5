@@ -119,7 +119,7 @@ public class QuestionController {
     @GetMapping("/detail/{id}")
     public Result<QuestionDetailResponse> getQuestionDetail(
             @Parameter(description = "题目ID", required = true, example = "100")
-            @PathVariable Long id) {
+            @PathVariable(name = "id") Long id) {
         return Result.success(questionService.getQuestionDetail(id));
     }
 

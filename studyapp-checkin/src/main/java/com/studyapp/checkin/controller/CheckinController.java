@@ -56,9 +56,9 @@ public class CheckinController {
     @GetMapping("/records")
     public Result<PageResult<CheckinRecordResponse>> getRecords(
             @Parameter(description = "页码，从1开始", example = "1")
-            @RequestParam(defaultValue = "1") Integer pageNum,
+            @RequestParam(name = "pageNum", defaultValue = "1") Integer pageNum,
             @Parameter(description = "每页数量，默认10条", example = "10")
-            @RequestParam(defaultValue = "10") Integer pageSize) {
+            @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
         Long userId = UserContext.getUserId();
         return Result.success(checkinService.getRecords(userId, pageNum, pageSize));
     }
@@ -74,7 +74,7 @@ public class CheckinController {
     @GetMapping("/ranking/streak")
     public Result<List<CheckinRankResponse>> getStreakRanking(
             @Parameter(description = "返回排行榜的数量限制，默认50人", example = "50")
-            @RequestParam(defaultValue = "50") Integer limit) {
+            @RequestParam(name = "limit", defaultValue = "50") Integer limit) {
         return Result.success(checkinService.getStreakRanking(limit));
     }
 
@@ -82,7 +82,7 @@ public class CheckinController {
     @GetMapping("/ranking/total")
     public Result<List<CheckinRankResponse>> getTotalDaysRanking(
             @Parameter(description = "返回排行榜的数量限制，默认50人", example = "50")
-            @RequestParam(defaultValue = "50") Integer limit) {
+            @RequestParam(name = "limit", defaultValue = "50") Integer limit) {
         return Result.success(checkinService.getTotalDaysRanking(limit));
     }
 
@@ -90,7 +90,7 @@ public class CheckinController {
     @GetMapping("/ranking/my")
     public Result<Integer> getMyRank(
             @Parameter(description = "排名类型：streak-连续打卡排名，total-总天数排名", example = "streak")
-            @RequestParam(defaultValue = "streak") String type) {
+            @RequestParam(name = "type", defaultValue = "streak") String type) {
         Long userId = UserContext.getUserId();
         return Result.success(checkinService.getUserRank(userId, type));
     }

@@ -70,7 +70,7 @@ public class CourseController {
     @GetMapping("/detail/{id}")
     public Result<CourseDetailResponse> getCourseDetail(
             @Parameter(description = "课程ID", required = true, example = "1")
-            @PathVariable Long id) {
+            @PathVariable(name = "id") Long id) {
         return Result.success(courseService.getCourseDetail(id));
     }
 
@@ -94,7 +94,7 @@ public class CourseController {
     @GetMapping("/video/{id}")
     public Result<VideoPlayResponse> getVideoPlayUrl(
             @Parameter(description = "视频ID", required = true, example = "1")
-            @PathVariable Long id) {
+            @PathVariable(name = "id") Long id) {
         Long userId = UserContext.getUserId();
         return Result.success(courseService.getVideoPlayUrl(userId, id));
     }
@@ -145,7 +145,7 @@ public class CourseController {
     @GetMapping("/progress/{courseId}")
     public Result<ProgressResponse> getProgress(
             @Parameter(description = "课程ID，查询该课程的学习进度", required = true, example = "1")
-            @PathVariable Long courseId) {
+            @PathVariable(name = "courseId") Long courseId) {
         Long userId = UserContext.getUserId();
         return Result.success(courseService.getProgress(userId, courseId));
     }

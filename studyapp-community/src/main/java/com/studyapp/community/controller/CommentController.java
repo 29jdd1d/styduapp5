@@ -38,9 +38,9 @@ public class CommentController {
             @Parameter(description = "帖子ID，获取该帖子下的所有评论", required = true, example = "1")
             @RequestParam(name = "postId") Long postId,
             @Parameter(description = "页码，从1开始", example = "1")
-            @RequestParam(defaultValue = "1") Integer pageNum,
+            @RequestParam(name = "pageNum", defaultValue = "1") Integer pageNum,
             @Parameter(description = "每页数量，默认10条", example = "10")
-            @RequestParam(defaultValue = "10") Integer pageSize) {
+            @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
         Long userId = UserContext.getUserId();
         return Result.success(commentService.getCommentList(userId, postId, pageNum, pageSize));
     }
@@ -49,7 +49,7 @@ public class CommentController {
     @DeleteMapping("/{commentId}")
     public Result<Void> deleteComment(
             @Parameter(description = "要删除的评论ID", required = true, example = "1")
-            @PathVariable Long commentId) {
+            @PathVariable(name = "commentId") Long commentId) {
         Long userId = UserContext.getUserId();
         commentService.deleteComment(userId, commentId);
         return Result.success();
@@ -59,7 +59,7 @@ public class CommentController {
     @PostMapping("/{commentId}/like")
     public Result<Void> likeComment(
             @Parameter(description = "要点赞的评论ID", required = true, example = "1")
-            @PathVariable Long commentId) {
+            @PathVariable(name = "commentId") Long commentId) {
         Long userId = UserContext.getUserId();
         commentService.likeComment(userId, commentId);
         return Result.success();
@@ -69,7 +69,7 @@ public class CommentController {
     @DeleteMapping("/{commentId}/like")
     public Result<Void> unlikeComment(
             @Parameter(description = "要取消点赞的评论ID", required = true, example = "1")
-            @PathVariable Long commentId) {
+            @PathVariable(name = "commentId") Long commentId) {
         Long userId = UserContext.getUserId();
         commentService.unlikeComment(userId, commentId);
         return Result.success();

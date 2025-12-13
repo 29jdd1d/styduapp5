@@ -36,17 +36,17 @@ public class PostController {
     @GetMapping("/list")
     public Result<PageResult<PostListResponse>> getPostList(
             @Parameter(description = "专业ID，用于筛选特定专业的帖子，不传则显示所有专业")
-            @RequestParam(required = false) Long majorId,
+            @RequestParam(name = "majorId", required = false) Long majorId,
             @Parameter(description = "帖子类型：1-经验分享，2-问题求助，3-资料分享，4-日常交流等，不传则显示所有类型")
-            @RequestParam(required = false) Integer type,
+            @RequestParam(name = "type", required = false) Integer type,
             @Parameter(description = "搜索关键词，用于模糊匹配帖子标题和内容")
-            @RequestParam(required = false) String keyword,
+            @RequestParam(name = "keyword", required = false) String keyword,
             @Parameter(description = "排序方式：new-最新发布，hot-最热门（按点赞和评论数）", example = "new")
-            @RequestParam(defaultValue = "new") String orderBy,
+            @RequestParam(name = "orderBy", defaultValue = "new") String orderBy,
             @Parameter(description = "页码，从1开始", example = "1")
-            @RequestParam(defaultValue = "1") Integer pageNum,
+            @RequestParam(name = "pageNum", defaultValue = "1") Integer pageNum,
             @Parameter(description = "每页数量，默认10条", example = "10")
-            @RequestParam(defaultValue = "10") Integer pageSize) {
+            @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
         return Result.success(postService.getPostList(majorId, type, keyword, orderBy, pageNum, pageSize));
     }
 
@@ -54,7 +54,7 @@ public class PostController {
     @GetMapping("/{postId}")
     public Result<PostDetailResponse> getPostDetail(
             @Parameter(description = "帖子ID", required = true, example = "1")
-            @PathVariable Long postId) {
+            @PathVariable(name = "postId") Long postId) {
         Long userId = UserContext.getUserId();
         return Result.success(postService.getPostDetail(userId, postId));
     }
@@ -63,7 +63,7 @@ public class PostController {
     @DeleteMapping("/{postId}")
     public Result<Void> deletePost(
             @Parameter(description = "要删除的帖子ID", required = true, example = "1")
-            @PathVariable Long postId) {
+            @PathVariable(name = "postId") Long postId) {
         Long userId = UserContext.getUserId();
         postService.deletePost(userId, postId);
         return Result.success();
@@ -73,7 +73,7 @@ public class PostController {
     @PostMapping("/{postId}/like")
     public Result<Void> likePost(
             @Parameter(description = "要点赞的帖子ID", required = true, example = "1")
-            @PathVariable Long postId) {
+            @PathVariable(name = "postId") Long postId) {
         Long userId = UserContext.getUserId();
         postService.likePost(userId, postId);
         return Result.success();
@@ -83,7 +83,7 @@ public class PostController {
     @DeleteMapping("/{postId}/like")
     public Result<Void> unlikePost(
             @Parameter(description = "要取消点赞的帖子ID", required = true, example = "1")
-            @PathVariable Long postId) {
+            @PathVariable(name = "postId") Long postId) {
         Long userId = UserContext.getUserId();
         postService.unlikePost(userId, postId);
         return Result.success();
@@ -93,9 +93,9 @@ public class PostController {
     @GetMapping("/my")
     public Result<PageResult<PostListResponse>> getMyPosts(
             @Parameter(description = "页码，从1开始", example = "1")
-            @RequestParam(defaultValue = "1") Integer pageNum,
+            @RequestParam(name = "pageNum", defaultValue = "1") Integer pageNum,
             @Parameter(description = "每页数量，默认10条", example = "10")
-            @RequestParam(defaultValue = "10") Integer pageSize) {
+            @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
         Long userId = UserContext.getUserId();
         return Result.success(postService.getMyPosts(userId, pageNum, pageSize));
     }

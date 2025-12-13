@@ -49,7 +49,7 @@ public class ExamController {
     @PostMapping("/start/{examId}")
     public Result<PracticeQuestionResponse> startExam(
             @Parameter(description = "试卷ID", required = true, example = "1")
-            @PathVariable Long examId) {
+            @PathVariable(name = "examId") Long examId) {
         Long userId = UserContext.getUserId();
         return Result.success(examService.startExam(userId, examId));
     }
@@ -73,9 +73,9 @@ public class ExamController {
     @GetMapping("/records")
     public Result<PageResult<ExamResultResponse>> getExamRecords(
             @Parameter(description = "页码，从1开始", example = "1")
-            @RequestParam(defaultValue = "1") Integer pageNum,
+            @RequestParam(name = "pageNum", defaultValue = "1") Integer pageNum,
             @Parameter(description = "每页数量，默认10条", example = "10")
-            @RequestParam(defaultValue = "10") Integer pageSize) {
+            @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
         Long userId = UserContext.getUserId();
         return Result.success(examService.getExamRecords(userId, pageNum, pageSize));
     }
@@ -87,7 +87,7 @@ public class ExamController {
     @GetMapping("/result/{recordId}")
     public Result<ExamResultResponse> getExamResult(
             @Parameter(description = "考试记录ID", required = true, example = "1")
-            @PathVariable Long recordId) {
+            @PathVariable(name = "recordId") Long recordId) {
         Long userId = UserContext.getUserId();
         return Result.success(examService.getExamResult(userId, recordId));
     }
