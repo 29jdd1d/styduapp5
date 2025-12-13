@@ -32,6 +32,7 @@ public class AuthServiceImpl implements AuthService {
     private final WxMiniappConfig wxMiniappConfig;
     private final UserFeignClient userFeignClient;
     private final RedisUtils redisUtils;
+    private final JwtUtils jwtUtils;
 
     /**
      * 微信登录API地址
@@ -86,7 +87,7 @@ public class AuthServiceImpl implements AuthService {
 
         // 5. 生成Token
         Long userId = Long.valueOf(userInfo.get("id").toString());
-        String token = JwtUtils.generateToken(userId, openid);
+        String token = jwtUtils.generateToken(userId, openid);
 
         // 6. 保存Token到Redis
         redisUtils.set(RedisConstants.USER_TOKEN_PREFIX + userId, token,
@@ -114,20 +115,20 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public String refreshToken(String oldToken) {
         // 验证旧Token
-        Long userId = JwtUtils.getUserId(oldToken);
+        Long userId = jwtUtils.getUserId(oldToken);
         if (userId == null) {
             throw new BusinessException(ResultCode.TOKEN_INVALID);
         }
 
         // 获取openid（从旧Token解析）
-        var claims = JwtUtils.parseToken(oldToken);
+        var claims = jwtUtils.parseToken(oldToken);
         if (claims == null) {
             throw new BusinessException(ResultCode.TOKEN_INVALID);
         }
         String openid = claims.get("openid", String.class);
 
         // 生成新Token
-        String newToken = JwtUtils.generateToken(userId, openid);
+        String newToken = jwtUtils.generateToken(userId, openid);
 
         // 更新Redis中的Token
         redisUtils.set(RedisConstants.USER_TOKEN_PREFIX + userId, newToken,
@@ -138,7 +139,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void logout(String token) {
-        Long userId = JwtUtils.getUserId(token);
+        Long userId = jwtUtils.getUserId(token);
         if (userId != null) {
             // 删除Redis中的Token
             redisUtils.delete(RedisConstants.USER_TOKEN_PREFIX + userId);

@@ -24,12 +24,7 @@ mybatis-plus:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
-# 腾讯云COS配置
-cos:
-  secret-id: your-secret-id
-  secret-key: your-secret-key
-  region: ap-guangzhou
-  bucket-name: your-bucket-name
+# 腾讯云COS配置 - 从Nacos共享配置获取 (studyapp-cos.yml)
 
 # Knife4j配置
 springdoc:

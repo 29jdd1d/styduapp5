@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import org.apache.ibatis.reflection.MetaObject;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,8 +13,10 @@ import java.time.LocalDateTime;
 
 /**
  * MyBatis Plus配置
+ * 仅在MyBatis-Plus类存在时加载
  */
 @Configuration
+@ConditionalOnClass(name = "com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor")
 public class MyBatisPlusConfig {
 
     /**

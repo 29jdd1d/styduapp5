@@ -85,4 +85,16 @@ public class UserInnerController {
     public Result<List<Map<String, Object>>> getBatchUserInfo(@RequestParam List<Long> userIds) {
         return Result.success(userService.getBatchUserInfoMap(userIds));
     }
+
+    @Operation(summary = "获取用户总数")
+    @GetMapping("/stats/total")
+    public Result<Long> getTotalCount() {
+        return Result.success(userService.getTotalCount());
+    }
+
+    @Operation(summary = "获取今日新增用户数")
+    @GetMapping("/stats/today")
+    public Result<Long> getTodayNewCount() {
+        return Result.success(userService.getTodayNewCount());
+    }
 }

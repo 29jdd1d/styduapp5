@@ -54,7 +54,7 @@ public class AdminAuthServiceImpl implements AdminAuthService {
         adminUserMapper.updateById(admin);
 
         // 生成Token
-        String token = jwtUtils.generateToken(admin.getId());
+        String token = jwtUtils.generateAdminToken(admin.getId(), admin.getUsername());
 
         AdminLoginResponse response = new AdminLoginResponse();
         response.setToken(token);

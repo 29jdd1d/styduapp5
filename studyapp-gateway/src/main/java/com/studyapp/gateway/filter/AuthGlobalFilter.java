@@ -2,7 +2,7 @@ package com.studyapp.gateway.filter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.studyapp.gateway.config.GatewayProperties;
+import com.studyapp.gateway.config.AuthWhiteListProperties;
 import com.studyapp.gateway.utils.JwtUtils;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +34,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AuthGlobalFilter implements GlobalFilter, Ordered {
 
-    private final GatewayProperties gatewayProperties;
+    private final AuthWhiteListProperties authWhiteListProperties;
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
@@ -89,7 +89,7 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
      * 检查是否是白名单路径
      */
     private boolean isWhiteList(String path) {
-        List<String> whiteList = gatewayProperties.getWhiteList();
+        List<String> whiteList = authWhiteListProperties.getWhiteList();
         if (whiteList == null || whiteList.isEmpty()) {
             return false;
         }

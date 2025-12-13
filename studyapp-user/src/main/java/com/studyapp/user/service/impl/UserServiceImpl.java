@@ -19,6 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -184,5 +186,18 @@ public class UserServiceImpl implements UserService {
         return users.stream()
                 .map(this::getUserInfoMap)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Long getTotalCount() {
+        return userMapper.selectCount(new LambdaQueryWrapper<User>()
+                .eq(User::getStatus, 1));
+    }
+
+    @Override
+    public Long getTodayNewCount() {
+        LocalDateTime todayStart = LocalDate.now().atStartOfDay();
+        return userMapper.selectCount(new LambdaQueryWrapper<User>()
+                .ge(User::getCreateTime, todayStart));
     }
 }

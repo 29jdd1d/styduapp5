@@ -217,7 +217,7 @@ public class PostServiceImpl implements PostService {
 
     private PageResult<PostListResponse> buildPostListResult(Page<Post> postPage) {
         if (postPage.getRecords().isEmpty()) {
-            return PageResult.of(Collections.emptyList(), 0L);
+            return PageResult.of(postPage.getCurrent(), postPage.getSize(), 0L, Collections.emptyList());
         }
 
         // 获取用户信息
@@ -278,6 +278,6 @@ public class PostServiceImpl implements PostService {
                 })
                 .collect(Collectors.toList());
 
-        return PageResult.of(list, postPage.getTotal());
+        return PageResult.of(postPage.getCurrent(), postPage.getSize(), postPage.getTotal(), list);
     }
 }

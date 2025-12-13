@@ -62,4 +62,22 @@ public interface QuestionService {
      * @return 分类ID列表
      */
     List<Long> getAllChildCategoryIds(Long categoryId);
+
+    /**
+     * 获取分类下的题目ID列表（顺序）
+     *
+     * @param categoryId 分类ID
+     * @param count      数量
+     * @return 题目ID列表
+     */
+    List<Long> getQuestionIds(Long categoryId, Integer count);
+
+    /**
+     * 随机获取分类下的题目ID列表
+     *
+     * @param categoryId 分类ID
+     * @param count      数量
+     * @return 题目ID列表
+     */
+    List<Long> getRandomQuestionIds(Long categoryId, Integer count);
 }

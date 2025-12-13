@@ -169,7 +169,7 @@ public class CheckinServiceImpl implements CheckinService {
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
 
-        return PageResult.of(list, recordPage.getTotal());
+        return PageResult.of(recordPage.getCurrent(), recordPage.getSize(), recordPage.getTotal(), list);
     }
 
     @Override

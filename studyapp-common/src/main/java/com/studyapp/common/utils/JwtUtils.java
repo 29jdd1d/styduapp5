@@ -1,9 +1,13 @@
 package com.studyapp.common.utils;
 
+import com.studyapp.common.config.JwtConfig;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
@@ -13,19 +17,14 @@ import java.util.Map;
 
 /**
  * JWT工具类
+ * 配置从Nacos获取
  */
 @Slf4j
+@Component
+@RequiredArgsConstructor
 public class JwtUtils {
 
-    /**
-     * 密钥（生产环境应从配置中读取）
-     */
-    private static final String SECRET = "studyapp-secret-key-must-be-at-least-256-bits-long";
-
-    /**
-     * Token有效期（7天）
-     */
-    private static final long EXPIRATION = 7 * 24 * 60 * 60 * 1000L;
+    private final JwtConfig jwtConfig;
 
     /**
      * Token前缀
@@ -37,8 +36,20 @@ public class JwtUtils {
      */
     public static final String HEADER_NAME = "Authorization";
 
-    private static SecretKey getSecretKey() {
-        return Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
+    // 静态实例，用于静态方法访问
+    private static JwtUtils instance;
+
+    @PostConstruct
+    public void init() {
+        instance = this;
+    }
+
+    private SecretKey getSecretKey() {
+        return Keys.hmacShaKeyFor(jwtConfig.getSecret().getBytes(StandardCharsets.UTF_8));
+    }
+
+    private long getExpirationMs() {
+        return jwtConfig.getExpiration() * 1000L;
     }
 
     /**
@@ -48,7 +59,7 @@ public class JwtUtils {
      * @param openid 微信openid
      * @return Token
      */
-    public static String generateToken(Long userId, String openid) {
+    public String generateToken(Long userId, String openid) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", userId);
         claims.put("openid", openid);
@@ -57,7 +68,7 @@ public class JwtUtils {
                 .claims(claims)
                 .subject(String.valueOf(userId))
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + EXPIRATION))
+                .expiration(new Date(System.currentTimeMillis() + getExpirationMs()))
                 .signWith(getSecretKey())
                 .compact();
     }
@@ -69,7 +80,7 @@ public class JwtUtils {
      * @param username 用户名
      * @return Token
      */
-    public static String generateAdminToken(Long adminId, String username) {
+    public String generateAdminToken(Long adminId, String username) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("adminId", adminId);
         claims.put("username", username);
@@ -79,7 +90,7 @@ public class JwtUtils {
                 .claims(claims)
                 .subject(String.valueOf(adminId))
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + EXPIRATION))
+                .expiration(new Date(System.currentTimeMillis() + getExpirationMs()))
                 .signWith(getSecretKey())
                 .compact();
     }
@@ -90,7 +101,7 @@ public class JwtUtils {
      * @param token Token
      * @return Claims
      */
-    public static Claims parseToken(String token) {
+    public Claims parseToken(String token) {
         try {
             if (token.startsWith(TOKEN_PREFIX)) {
                 token = token.substring(TOKEN_PREFIX.length());
@@ -112,7 +123,7 @@ public class JwtUtils {
      * @param token Token
      * @return 用户ID
      */
-    public static Long getUserId(String token) {
+    public Long getUserId(String token) {
         Claims claims = parseToken(token);
         if (claims != null) {
             Object userId = claims.get("userId");
@@ -129,7 +140,7 @@ public class JwtUtils {
      * @param token Token
      * @return 管理员ID
      */
-    public static Long getAdminId(String token) {
+    public Long getAdminId(String token) {
         Claims claims = parseToken(token);
         if (claims != null) {
             Object adminId = claims.get("adminId");
@@ -146,7 +157,7 @@ public class JwtUtils {
      * @param token Token
      * @return 是否有效
      */
-    public static boolean validateToken(String token) {
+    public boolean validateToken(String token) {
         Claims claims = parseToken(token);
         if (claims == null) {
             return false;
@@ -160,11 +171,33 @@ public class JwtUtils {
      * @param token Token
      * @return 是否是管理员
      */
-    public static boolean isAdminToken(String token) {
+    public boolean isAdminToken(String token) {
         Claims claims = parseToken(token);
         if (claims != null) {
             return "admin".equals(claims.get("type"));
         }
         return false;
+    }
+
+    // ============ 静态方法（供Gateway等无法注入的场景使用） ============
+
+    public static Long getUserIdStatic(String token) {
+        return instance != null ? instance.getUserId(token) : null;
+    }
+
+    public static Long getAdminIdStatic(String token) {
+        return instance != null ? instance.getAdminId(token) : null;
+    }
+
+    public static boolean validateTokenStatic(String token) {
+        return instance != null && instance.validateToken(token);
+    }
+
+    public static boolean isAdminTokenStatic(String token) {
+        return instance != null && instance.isAdminToken(token);
+    }
+
+    public static Claims parseTokenStatic(String token) {
+        return instance != null ? instance.parseToken(token) : null;
     }
 }

@@ -3,7 +3,10 @@ package com.studyapp.gateway.utils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
@@ -11,17 +14,28 @@ import java.util.Date;
 
 /**
  * JWT工具类（网关专用）
+ * 配置从Nacos共享配置获取
  */
 @Slf4j
+@Component
 public class JwtUtils {
 
-    /**
-     * 密钥（需要与其他服务保持一致）
-     */
-    private static final String SECRET = "studyapp-secret-key-must-be-at-least-256-bits-long";
+    @Value("${jwt.secret:studyapp-secret-key-must-be-at-least-256-bits-long}")
+    private String secret;
+
+    // 静态实例
+    private static JwtUtils instance;
+
+    @PostConstruct
+    public void init() {
+        instance = this;
+        log.info("JwtUtils initialized with secret length: {}", secret.length());
+    }
 
     private static SecretKey getSecretKey() {
-        return Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
+        String secretKey = instance != null ? instance.secret 
+                : "studyapp-secret-key-must-be-at-least-256-bits-long";
+        return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
     /**

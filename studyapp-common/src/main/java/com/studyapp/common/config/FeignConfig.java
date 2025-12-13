@@ -4,13 +4,16 @@ import com.studyapp.common.constant.CommonConstants;
 import com.studyapp.common.utils.UserContext;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
  * Feign配置
+ * 仅在Feign类存在时加载
  */
 @Configuration
+@ConditionalOnClass(name = "feign.RequestInterceptor")
 public class FeignConfig {
 
     /**

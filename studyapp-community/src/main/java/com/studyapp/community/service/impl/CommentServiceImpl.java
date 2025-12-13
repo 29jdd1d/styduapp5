@@ -74,7 +74,7 @@ public class CommentServiceImpl implements CommentService {
         Page<PostComment> commentPage = postCommentMapper.selectPage(page, wrapper);
 
         if (commentPage.getRecords().isEmpty()) {
-            return PageResult.of(Collections.emptyList(), 0L);
+            return PageResult.of(commentPage.getCurrent(), commentPage.getSize(), 0L, Collections.emptyList());
         }
 
         // 获取所有一级评论的子评论
@@ -137,7 +137,7 @@ public class CommentServiceImpl implements CommentService {
                 })
                 .collect(Collectors.toList());
 
-        return PageResult.of(list, commentPage.getTotal());
+        return PageResult.of(commentPage.getCurrent(), commentPage.getSize(), commentPage.getTotal(), list);
     }
 
     @Override

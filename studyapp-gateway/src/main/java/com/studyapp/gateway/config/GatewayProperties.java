@@ -7,12 +7,12 @@ import org.springframework.context.annotation.Configuration;
 import java.util.List;
 
 /**
- * 网关配置属性
+ * 网关白名单配置属性
  */
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "gateway")
-public class GatewayProperties {
+public class AuthWhiteListProperties {
 
     /**
      * 白名单路径（不需要登录）

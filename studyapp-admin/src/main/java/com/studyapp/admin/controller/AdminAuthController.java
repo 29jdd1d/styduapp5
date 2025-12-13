@@ -33,7 +33,7 @@ public class AdminAuthController {
     @Operation(summary = "获取当前管理员信息")
     @GetMapping("/info")
     public Result<AdminLoginResponse> getCurrentAdmin() {
-        Long adminId = UserContext.getUserId();
+        Long adminId = UserContext.getAdminId();
         return Result.success(adminAuthService.getCurrentAdmin(adminId));
     }
 
@@ -41,8 +41,16 @@ public class AdminAuthController {
     @PostMapping("/password")
     public Result<Void> changePassword(@RequestParam String oldPassword,
                                        @RequestParam String newPassword) {
-        Long adminId = UserContext.getUserId();
+        Long adminId = UserContext.getAdminId();
         adminAuthService.changePassword(adminId, oldPassword, newPassword);
+        return Result.success();
+    }
+
+    @Operation(summary = "管理员登出")
+    @PostMapping("/logout")
+    public Result<Void> logout() {
+        // 清除上下文
+        UserContext.clear();
         return Result.success();
     }
 

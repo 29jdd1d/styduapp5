@@ -67,4 +67,14 @@ public interface UserService {
      * 批量获取用户信息（Map格式，供Feign调用）
      */
     List<Map<String, Object>> getBatchUserInfoMap(List<Long> userIds);
+
+    /**
+     * 获取用户总数
+     */
+    Long getTotalCount();
+
+    /**
+     * 获取今日新增用户数
+     */
+    Long getTodayNewCount();
 }

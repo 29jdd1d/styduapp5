@@ -43,6 +43,22 @@ public class PracticeServiceImpl implements PracticeService {
         List<Long> questionIds;
         
         switch (request.getMode()) {
+            case 1: // 顺序模式
+                Result<List<Long>> orderResult = questionFeignClient.getQuestionIds(
+                        request.getCategoryId(), request.getCount());
+                if (!orderResult.isSuccess() || orderResult.getData() == null || orderResult.getData().isEmpty()) {
+                    throw new BusinessException("该分类下暂无题目");
+                }
+                questionIds = orderResult.getData();
+                break;
+            case 2: // 随机模式
+                Result<List<Long>> randomResult = questionFeignClient.getRandomQuestionIds(
+                        request.getCategoryId(), request.getCount());
+                if (!randomResult.isSuccess() || randomResult.getData() == null || randomResult.getData().isEmpty()) {
+                    throw new BusinessException("该分类下暂无题目");
+                }
+                questionIds = randomResult.getData();
+                break;
             case 3: // 错题模式
                 questionIds = userWrongQuestionMapper.selectWrongQuestionIds(userId, request.getCount());
                 if (questionIds.isEmpty()) {
@@ -56,10 +72,7 @@ public class PracticeServiceImpl implements PracticeService {
                 }
                 break;
             default:
-                // 顺序/随机模式 - 这里简化处理，实际应该调用题库服务获取题目ID
-                // TODO: 调用题库服务获取题目列表
-                questionIds = new ArrayList<>();
-                break;
+                throw new BusinessException("不支持的练习模式");
         }
 
         // 创建练习记录
@@ -172,7 +185,7 @@ public class PracticeServiceImpl implements PracticeService {
                 .map(this::buildPracticeResult)
                 .collect(Collectors.toList());
 
-        return PageResult.of(list, recordPage.getTotal());
+        return PageResult.of(recordPage.getCurrent(), recordPage.getSize(), recordPage.getTotal(), list);
     }
 
     @Override
@@ -190,7 +203,7 @@ public class PracticeServiceImpl implements PracticeService {
                 .collect(Collectors.toList());
 
         if (questionIds.isEmpty()) {
-            return PageResult.of(Collections.emptyList(), 0L);
+            return PageResult.of((long) pageNum, (long) pageSize, 0L, Collections.emptyList());
         }
 
         // 获取题目详情
@@ -221,7 +234,7 @@ public class PracticeServiceImpl implements PracticeService {
                 })
                 .collect(Collectors.toList());
 
-        return PageResult.of(list, wrongPage.getTotal());
+        return PageResult.of(wrongPage.getCurrent(), wrongPage.getSize(), wrongPage.getTotal(), list);
     }
 
     @Override
@@ -277,7 +290,7 @@ public class PracticeServiceImpl implements PracticeService {
                 .collect(Collectors.toList());
 
         if (questionIds.isEmpty()) {
-            return PageResult.of(Collections.emptyList(), 0L);
+            return PageResult.of((long) pageNum, (long) pageSize, 0L, Collections.emptyList());
         }
 
         // 获取题目详情
@@ -305,7 +318,7 @@ public class PracticeServiceImpl implements PracticeService {
                 })
                 .collect(Collectors.toList());
 
-        return PageResult.of(list, favPage.getTotal());
+        return PageResult.of(favPage.getCurrent(), favPage.getSize(), favPage.getTotal(), list);
     }
 
     @Override

@@ -1,0 +1,38 @@
+# ============================================
+# Nacos 配置中心配置文件示例
+# 请在 Nacos 控制台中创建以下配置
+# ============================================
+
+# ---------------------------------------------
+# 1. JWT共享配置: studyapp-jwt.yml
+# Data ID: studyapp-jwt.yml
+# Group: DEFAULT_GROUP
+# 配置内容:
+# ---------------------------------------------
+jwt:
+  secret: studyapp-secret-key-must-be-at-least-256-bits-long-change-in-production
+  expiration: 604800  # 7天（秒）
+
+# ---------------------------------------------
+# 2. COS共享配置: studyapp-cos.yml
+# Data ID: studyapp-cos.yml
+# Group: DEFAULT_GROUP
+# 配置内容:
+# ---------------------------------------------
+cos:
+  secret-id: 你的腾讯云SecretId
+  secret-key: 你的腾讯云SecretKey
+  region: ap-guangzhou
+  bucket-name: 你的存储桶名称
+
+# ---------------------------------------------
+# 说明：
+# 1. 登录 Nacos 控制台 (http://localhost:8848/nacos)
+# 2. 进入【配置管理】->【配置列表】
+# 3. 点击【+】创建新配置
+# 4. 分别创建以上两个配置文件
+#
+# 服务引用情况：
+# - studyapp-jwt.yml: gateway, auth, admin 引用
+# - studyapp-cos.yml: course 引用
+# ---------------------------------------------

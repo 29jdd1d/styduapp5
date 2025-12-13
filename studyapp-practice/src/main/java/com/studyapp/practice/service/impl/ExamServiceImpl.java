@@ -75,7 +75,7 @@ public class ExamServiceImpl implements ExamService {
                 })
                 .collect(Collectors.toList());
 
-        return PageResult.of(list, examPage.getTotal());
+        return PageResult.of(examPage.getCurrent(), examPage.getSize(), examPage.getTotal(), list);
     }
 
     @Override
@@ -275,7 +275,7 @@ public class ExamServiceImpl implements ExamService {
                 })
                 .collect(Collectors.toList());
 
-        return PageResult.of(list, recordPage.getTotal());
+        return PageResult.of(recordPage.getCurrent(), recordPage.getSize(), recordPage.getTotal(), list);
     }
 
     @Override

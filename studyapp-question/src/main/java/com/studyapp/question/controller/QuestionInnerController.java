@@ -39,4 +39,18 @@ public class QuestionInnerController {
     public Result<List<Long>> getChildCategoryIds(@RequestParam Long categoryId) {
         return Result.success(questionService.getAllChildCategoryIds(categoryId));
     }
+
+    @Operation(summary = "获取分类下的题目ID列表（顺序）")
+    @GetMapping("/listIds")
+    public Result<List<Long>> getQuestionIds(@RequestParam Long categoryId,
+                                              @RequestParam Integer count) {
+        return Result.success(questionService.getQuestionIds(categoryId, count));
+    }
+
+    @Operation(summary = "随机获取分类下的题目ID列表")
+    @GetMapping("/randomIds")
+    public Result<List<Long>> getRandomQuestionIds(@RequestParam Long categoryId,
+                                                    @RequestParam Integer count) {
+        return Result.success(questionService.getRandomQuestionIds(categoryId, count));
+    }
 }

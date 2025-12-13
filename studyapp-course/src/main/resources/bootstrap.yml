@@ -3,6 +3,8 @@ spring:
     name: studyapp-course
   cloud:
     nacos:
+      username: nacos
+      password: nacos
       discovery:
         server-addr: localhost:8848
         namespace: public
@@ -10,3 +12,8 @@ spring:
         server-addr: localhost:8848
         namespace: public
         file-extension: yml
+        # 共享配置 - COS配置
+        shared-configs:
+          - data-id: studyapp-cos.yml
+            group: DEFAULT_GROUP
+            refresh: true

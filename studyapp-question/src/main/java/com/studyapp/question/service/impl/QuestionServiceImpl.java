@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -207,5 +208,56 @@ public class QuestionServiceImpl implements QuestionService {
             log.error("解析选项JSON失败: {}", optionsJson, e);
             return new ArrayList<>();
         }
+    }
+
+    @Override
+    public List<Long> getQuestionIds(Long categoryId, Integer count) {
+        // 获取分类及子分类ID
+        List<Long> categoryIds = getAllChildCategoryIds(categoryId);
+        categoryIds.add(categoryId);
+
+        // 查询题目ID（按顺序）
+        LambdaQueryWrapper<Question> wrapper = new LambdaQueryWrapper<>();
+        wrapper.in(Question::getCategoryId, categoryIds)
+                .eq(Question::getStatus, CommonConstants.STATUS_NORMAL)
+                .orderByAsc(Question::getId)
+                .select(Question::getId);
+
+        if (count != null && count > 0) {
+            wrapper.last("LIMIT " + count);
+        }
+
+        return questionMapper.selectList(wrapper).stream()
+                .map(Question::getId)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Long> getRandomQuestionIds(Long categoryId, Integer count) {
+        // 获取分类及子分类ID
+        List<Long> categoryIds = getAllChildCategoryIds(categoryId);
+        categoryIds.add(categoryId);
+
+        // 查询题目ID（随机）
+        LambdaQueryWrapper<Question> wrapper = new LambdaQueryWrapper<>();
+        wrapper.in(Question::getCategoryId, categoryIds)
+                .eq(Question::getStatus, CommonConstants.STATUS_NORMAL)
+                .orderByAsc(Question::getId) // 先排序获取全部
+                .select(Question::getId);
+
+        List<Long> allIds = questionMapper.selectList(wrapper).stream()
+                .map(Question::getId)
+                .collect(Collectors.toList());
+
+        // 打乱并取指定数量
+        if (allIds.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        Collections.shuffle(allIds);
+        if (count != null && count > 0 && count < allIds.size()) {
+            return allIds.subList(0, count);
+        }
+        return allIds;
     }
 }

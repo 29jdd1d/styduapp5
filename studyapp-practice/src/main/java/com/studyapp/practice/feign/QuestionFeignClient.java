@@ -33,4 +33,18 @@ public interface QuestionFeignClient {
      */
     @GetMapping("/inner/category/childIds")
     Result<List<Long>> getChildCategoryIds(@RequestParam("categoryId") Long categoryId);
+
+    /**
+     * 根据分类获取题目ID列表（顺序模式）
+     */
+    @GetMapping("/inner/listIds")
+    Result<List<Long>> getQuestionIds(@RequestParam("categoryId") Long categoryId,
+                                       @RequestParam("count") Integer count);
+
+    /**
+     * 根据分类随机获取题目ID列表（随机模式）
+     */
+    @GetMapping("/inner/randomIds")
+    Result<List<Long>> getRandomQuestionIds(@RequestParam("categoryId") Long categoryId,
+                                             @RequestParam("count") Integer count);
 }
