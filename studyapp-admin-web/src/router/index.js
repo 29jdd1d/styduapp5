@@ -18,6 +18,30 @@ const routes = [
         name: 'Dashboard',
         component: () => import('@/views/dashboard/index.vue'),
         meta: { title: '仪表盘', icon: 'Odometer' }
+      },
+      {
+        path: 'users',
+        name: 'Users',
+        component: () => import('@/views/users/index.vue'),
+        meta: { title: '用户管理', icon: 'User' }
+      },
+      {
+        path: 'majors',
+        name: 'Majors',
+        component: () => import('@/views/majors/index.vue'),
+        meta: { title: '专业管理', icon: 'Collection' }
+      },
+      {
+        path: 'courses',
+        name: 'Courses',
+        component: () => import('@/views/courses/index.vue'),
+        meta: { title: '课程管理', icon: 'VideoCamera' }
+      },
+      {
+        path: 'questions',
+        name: 'Questions',
+        component: () => import('@/views/questions/index.vue'),
+        meta: { title: '题库管理', icon: 'Document' }
       }
     ]
   },

@@ -21,6 +21,26 @@
           <el-icon><Odometer /></el-icon>
           <template #title>仪表盘</template>
         </el-menu-item>
+        
+        <el-menu-item index="/users">
+          <el-icon><User /></el-icon>
+          <template #title>用户管理</template>
+        </el-menu-item>
+        
+        <el-menu-item index="/majors">
+          <el-icon><Collection /></el-icon>
+          <template #title>专业管理</template>
+        </el-menu-item>
+        
+        <el-menu-item index="/courses">
+          <el-icon><VideoCamera /></el-icon>
+          <template #title>课程管理</template>
+        </el-menu-item>
+        
+        <el-menu-item index="/questions">
+          <el-icon><Document /></el-icon>
+          <template #title>题库管理</template>
+        </el-menu-item>
       </el-menu>
     </aside>
     

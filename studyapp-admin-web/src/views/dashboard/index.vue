@@ -8,7 +8,7 @@
             <el-icon size="32"><User /></el-icon>
           </div>
           <div class="stat-info">
-            <div class="stat-value">{{ stats.userCount || 0 }}</div>
+            <div class="stat-value">{{ stats.totalUsers || 0 }}</div>
             <div class="stat-label">用户总数</div>
           </div>
         </el-card>
@@ -20,7 +20,7 @@
             <el-icon size="32"><VideoCamera /></el-icon>
           </div>
           <div class="stat-info">
-            <div class="stat-value">{{ stats.courseCount || 0 }}</div>
+            <div class="stat-value">{{ stats.totalCourses || 0 }}</div>
             <div class="stat-label">课程总数</div>
           </div>
         </el-card>
@@ -32,7 +32,7 @@
             <el-icon size="32"><Document /></el-icon>
           </div>
           <div class="stat-info">
-            <div class="stat-value">{{ stats.questionCount || 0 }}</div>
+            <div class="stat-value">{{ stats.totalQuestions || 0 }}</div>
             <div class="stat-label">题目总数</div>
           </div>
         </el-card>
@@ -44,7 +44,7 @@
             <el-icon size="32"><ChatDotSquare /></el-icon>
           </div>
           <div class="stat-info">
-            <div class="stat-value">{{ stats.postCount || 0 }}</div>
+            <div class="stat-value">{{ stats.totalPosts || 0 }}</div>
             <div class="stat-label">帖子总数</div>
           </div>
         </el-card>
@@ -56,9 +56,9 @@
       <el-col :xs="24" :lg="12">
         <el-card shadow="hover" class="chart-card">
           <template #header>
-            <span>用户增长趋势</span>
+            <span>数据概览</span>
           </template>
-          <div ref="userChartRef" class="chart-container"></div>
+          <div ref="barChartRef" class="chart-container"></div>
         </el-card>
       </el-col>
       
@@ -84,13 +84,13 @@
               <el-tag type="success">{{ stats.todayNewUsers || 0 }}</el-tag>
             </el-descriptions-item>
             <el-descriptions-item label="活跃用户">
-              <el-tag type="primary">{{ stats.todayActiveUsers || 0 }}</el-tag>
+              <el-tag type="primary">{{ stats.activeUsers || 0 }}</el-tag>
             </el-descriptions-item>
-            <el-descriptions-item label="新增帖子">
-              <el-tag type="warning">{{ stats.todayNewPosts || 0 }}</el-tag>
+            <el-descriptions-item label="今日签到">
+              <el-tag type="warning">{{ stats.todayCheckins || 0 }}</el-tag>
             </el-descriptions-item>
-            <el-descriptions-item label="学习记录">
-              <el-tag type="info">{{ stats.todayStudyRecords || 0 }}</el-tag>
+            <el-descriptions-item label="今日练习">
+              <el-tag type="info">{{ stats.todayPracticeCount || 0 }}</el-tag>
             </el-descriptions-item>
           </el-descriptions>
         </el-card>
@@ -121,9 +121,9 @@ import { getDashboardStats } from '@/api/dashboard'
 import { ElMessage } from 'element-plus'
 
 const stats = ref({})
-const userChartRef = ref(null)
+const barChartRef = ref(null)
 const pieChartRef = ref(null)
-let userChart = null
+let barChart = null
 let pieChart = null
 
 // 获取统计数据
@@ -136,56 +136,15 @@ const fetchStats = async () => {
     }
   } catch (error) {
     console.error('获取统计数据失败:', error)
-    // 使用模拟数据
-    stats.value = {
-      userCount: 1256,
-      courseCount: 48,
-      questionCount: 3500,
-      postCount: 890,
-      todayNewUsers: 23,
-      todayActiveUsers: 156,
-      todayNewPosts: 45,
-      todayStudyRecords: 320
-    }
-    updateCharts()
+    ElMessage.error('获取统计数据失败')
   }
 }
 
 // 初始化图表
 const initCharts = () => {
-  // 用户增长折线图
-  if (userChartRef.value) {
-    userChart = echarts.init(userChartRef.value)
-    userChart.setOption({
-      tooltip: {
-        trigger: 'axis'
-      },
-      xAxis: {
-        type: 'category',
-        data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
-      },
-      yAxis: {
-        type: 'value'
-      },
-      series: [{
-        name: '新增用户',
-        type: 'line',
-        smooth: true,
-        areaStyle: {
-          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            { offset: 0, color: 'rgba(64, 158, 255, 0.5)' },
-            { offset: 1, color: 'rgba(64, 158, 255, 0.1)' }
-          ])
-        },
-        lineStyle: {
-          color: '#409EFF'
-        },
-        itemStyle: {
-          color: '#409EFF'
-        },
-        data: [120, 132, 101, 134, 90, 230, 210]
-      }]
-    })
+  // 数据概览柱状图
+  if (barChartRef.value) {
+    barChart = echarts.init(barChartRef.value)
   }
   
   // 数据分布饼图
@@ -196,6 +155,44 @@ const initCharts = () => {
 
 // 更新图表
 const updateCharts = () => {
+  // 更新柱状图
+  if (barChart) {
+    barChart.setOption({
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'shadow'
+        }
+      },
+      xAxis: {
+        type: 'category',
+        data: ['用户', '课程', '题目', '帖子']
+      },
+      yAxis: {
+        type: 'value'
+      },
+      series: [{
+        name: '数量',
+        type: 'bar',
+        barWidth: '50%',
+        itemStyle: {
+          color: function(params) {
+            const colors = ['#409EFF', '#67C23A', '#E6A23C', '#F56C6C']
+            return colors[params.dataIndex]
+          },
+          borderRadius: [4, 4, 0, 0]
+        },
+        data: [
+          stats.value.totalUsers || 0,
+          stats.value.totalCourses || 0,
+          stats.value.totalQuestions || 0,
+          stats.value.totalPosts || 0
+        ]
+      }]
+    })
+  }
+  
+  // 更新饼图
   if (pieChart) {
     pieChart.setOption({
       tooltip: {
@@ -231,10 +228,10 @@ const updateCharts = () => {
           show: false
         },
         data: [
-          { value: stats.value.userCount || 1256, name: '用户', itemStyle: { color: '#409EFF' } },
-          { value: stats.value.courseCount || 48, name: '课程', itemStyle: { color: '#67C23A' } },
-          { value: stats.value.questionCount || 3500, name: '题目', itemStyle: { color: '#E6A23C' } },
-          { value: stats.value.postCount || 890, name: '帖子', itemStyle: { color: '#F56C6C' } }
+          { value: stats.value.totalUsers || 0, name: '用户', itemStyle: { color: '#409EFF' } },
+          { value: stats.value.totalCourses || 0, name: '课程', itemStyle: { color: '#67C23A' } },
+          { value: stats.value.totalQuestions || 0, name: '题目', itemStyle: { color: '#E6A23C' } },
+          { value: stats.value.totalPosts || 0, name: '帖子', itemStyle: { color: '#F56C6C' } }
         ]
       }]
     })
@@ -243,7 +240,7 @@ const updateCharts = () => {
 
 // 处理窗口大小变化
 const handleResize = () => {
-  userChart?.resize()
+  barChart?.resize()
   pieChart?.resize()
 }
 
@@ -255,9 +252,10 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize)
-  userChart?.dispose()
+  barChart?.dispose()
   pieChart?.dispose()
 })
+</script>
 </script>
 
 <style lang="scss" scoped>
