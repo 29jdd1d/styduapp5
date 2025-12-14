@@ -122,7 +122,25 @@
           </el-select>
         </el-form-item>
         <el-form-item label="封面图" prop="cover">
-          <el-input v-model="form.cover" placeholder="请输入封面图URL" />
+          <div class="cover-upload">
+            <el-upload
+              class="cover-uploader"
+              :action="imageUploadAction"
+              :headers="uploadHeaders"
+              :show-file-list="false"
+              :before-upload="beforeCoverUpload"
+              :on-success="handleCoverUploadSuccess"
+              :on-error="handleCoverUploadError"
+              accept="image/*"
+            >
+              <img v-if="form.cover" :src="form.cover" class="cover-preview" />
+              <div v-else class="cover-placeholder">
+                <el-icon><Plus /></el-icon>
+                <span>上传封面</span>
+              </div>
+            </el-upload>
+            <el-input v-model="form.cover" placeholder="或直接输入封面图URL" style="margin-top: 10px" />
+          </div>
         </el-form-item>
         <el-form-item label="讲师名称" prop="teacherName">
           <el-input v-model="form.teacherName" placeholder="请输入讲师名称" />
@@ -232,16 +250,37 @@
     </el-dialog>
 
     <!-- 视频表单弹窗 -->
-    <el-dialog v-model="videoFormVisible" :title="videoFormTitle" width="500px">
-      <el-form ref="videoFormRef" :model="videoForm" :rules="videoRules" label-width="80px">
+    <el-dialog v-model="videoFormVisible" :title="videoFormTitle" width="600px">
+      <el-form ref="videoFormRef" :model="videoForm" :rules="videoRules" label-width="100px">
         <el-form-item label="视频标题" prop="title">
           <el-input v-model="videoForm.title" placeholder="请输入视频标题" />
         </el-form-item>
+        <el-form-item label="上传视频">
+          <el-upload
+            class="video-uploader"
+            :action="uploadAction"
+            :headers="uploadHeaders"
+            :show-file-list="false"
+            :before-upload="beforeVideoUpload"
+            :on-success="handleVideoUploadSuccess"
+            :on-error="handleVideoUploadError"
+            :on-progress="handleVideoUploadProgress"
+            accept="video/*"
+          >
+            <el-button type="primary" :loading="videoUploading">
+              <el-icon><Upload /></el-icon>
+              {{ videoUploading ? `上传中 ${uploadProgress}%` : '点击上传视频' }}
+            </el-button>
+            <template #tip>
+              <div class="el-upload__tip">支持 mp4、avi、mov 等格式，最大500MB</div>
+            </template>
+          </el-upload>
+        </el-form-item>
         <el-form-item label="视频地址" prop="videoUrl">
-          <el-input v-model="videoForm.videoUrl" placeholder="请输入视频URL" />
+          <el-input v-model="videoForm.videoUrl" placeholder="上传后自动填充或手动输入URL" />
         </el-form-item>
         <el-form-item label="视频Key" prop="videoKey">
-          <el-input v-model="videoForm.videoKey" placeholder="请输入视频Key(用于签名URL)" />
+          <el-input v-model="videoForm.videoKey" placeholder="上传后自动填充(用于签名URL)" />
         </el-form-item>
         <el-form-item label="时长(秒)" prop="duration">
           <el-input-number v-model="videoForm.duration" :min="0" />
@@ -272,7 +311,7 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue'
-import { Search, Refresh, Plus, Picture } from '@element-plus/icons-vue'
+import { Search, Refresh, Plus, Picture, Upload } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { 
   getCourseList, getCourseDetail, addCourse, updateCourse, deleteCourse, updateCourseStatus,
@@ -280,6 +319,9 @@ import {
   addVideo, updateVideo, deleteVideo
 } from '@/api/course'
 import { getMajorList } from '@/api/major'
+import { useUserStore } from '@/stores/user'
+
+const userStore = useUserStore()
 
 const loading = ref(false)
 const submitLoading = ref(false)
@@ -289,6 +331,15 @@ const dialogVisible = ref(false)
 const isEdit = ref(false)
 const currentId = ref(null)
 const formRef = ref(null)
+
+// 视频上传相关
+const videoUploading = ref(false)
+const uploadProgress = ref(0)
+const uploadAction = '/api/admin/upload/video'
+const imageUploadAction = '/api/admin/upload/image'
+const uploadHeaders = computed(() => ({
+  'Authorization': `Bearer ${userStore.token}`
+}))
 
 // 章节管理
 const chapterDialogVisible = ref(false)
@@ -673,6 +724,84 @@ const handleCurrentChange = (page) => {
   fetchCourseList()
 }
 
+// 视频上传前校验
+const beforeVideoUpload = (file) => {
+  const isVideo = file.type.startsWith('video/')
+  const isLt500M = file.size / 1024 / 1024 < 500
+
+  if (!isVideo) {
+    ElMessage.error('只能上传视频文件!')
+    return false
+  }
+  if (!isLt500M) {
+    ElMessage.error('视频大小不能超过500MB!')
+    return false
+  }
+  
+  videoUploading.value = true
+  uploadProgress.value = 0
+  return true
+}
+
+// 视频上传成功
+const handleVideoUploadSuccess = (response) => {
+  videoUploading.value = false
+  uploadProgress.value = 100
+  
+  if (response.code === 200) {
+    ElMessage.success('视频上传成功')
+    videoForm.videoUrl = response.data.url
+    videoForm.videoKey = response.data.videoKey
+  } else {
+    ElMessage.error(response.message || '上传失败')
+  }
+}
+
+// 视频上传失败
+const handleVideoUploadError = (error) => {
+  videoUploading.value = false
+  uploadProgress.value = 0
+  ElMessage.error('视频上传失败，请重试')
+  console.error('上传错误:', error)
+}
+
+// 视频上传进度
+const handleVideoUploadProgress = (event) => {
+  uploadProgress.value = Math.round(event.percent || 0)
+}
+
+// 封面上传前校验
+const beforeCoverUpload = (file) => {
+  const isImage = file.type.startsWith('image/')
+  const isLt5M = file.size / 1024 / 1024 < 5
+
+  if (!isImage) {
+    ElMessage.error('只能上传图片文件!')
+    return false
+  }
+  if (!isLt5M) {
+    ElMessage.error('图片大小不能超过5MB!')
+    return false
+  }
+  return true
+}
+
+// 封面上传成功
+const handleCoverUploadSuccess = (response) => {
+  if (response.code === 200) {
+    ElMessage.success('封面上传成功')
+    form.cover = response.data.url
+  } else {
+    ElMessage.error(response.message || '上传失败')
+  }
+}
+
+// 封面上传失败
+const handleCoverUploadError = (error) => {
+  ElMessage.error('封面上传失败，请重试')
+  console.error('上传错误:', error)
+}
+
 onMounted(() => {
   fetchCourseList()
   fetchMajorList()
@@ -745,5 +874,47 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   padding-right: 20px;
+}
+
+.cover-upload {
+  width: 100%;
+  
+  .cover-uploader {
+    :deep(.el-upload) {
+      border: 1px dashed #d9d9d9;
+      border-radius: 6px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s;
+      
+      &:hover {
+        border-color: #409eff;
+      }
+    }
+  }
+  
+  .cover-preview {
+    width: 200px;
+    height: 120px;
+    object-fit: cover;
+    display: block;
+  }
+  
+  .cover-placeholder {
+    width: 200px;
+    height: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #8c939d;
+    font-size: 14px;
+    
+    .el-icon {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+  }
 }
 </style>

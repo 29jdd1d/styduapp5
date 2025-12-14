@@ -164,7 +164,14 @@ public class UserServiceImpl implements UserService {
         map.put("openid", user.getOpenid());
         map.put("nickname", user.getNickname());
         map.put("avatar", user.getAvatar());
+        map.put("phone", user.getPhone());
+        map.put("gender", user.getGender());
         map.put("majorId", user.getMajorId());
+        map.put("examYear", user.getExamYear());
+        map.put("studyDays", user.getStudyDays());
+        map.put("totalQuestions", user.getTotalQuestions());
+        map.put("status", user.getStatus());
+        map.put("createTime", user.getCreateTime());
 
         // 获取专业名称
         if (user.getMajorId() != null) {

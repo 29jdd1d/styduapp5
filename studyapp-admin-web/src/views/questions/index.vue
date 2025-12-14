@@ -199,9 +199,11 @@
             <el-form-item label="状态" prop="status">
               <el-radio-group v-model="form.status">
                 <el-radio :value="1">启用</el-radio>
-                <el-radio :value="0">禁用</el-radio></el-radio>
-          </el-radio-group>
-        </el-form-item>
+                <el-radio :value="0">禁用</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
       <template #footer>
         <el-button @click="dialogVisible = false">取消</el-button>
