@@ -2,8 +2,8 @@ package com.studyapp.gateway.filter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.studyapp.common.utils.JwtUtils;
 import com.studyapp.gateway.config.AuthWhiteListProperties;
-import com.studyapp.gateway.utils.JwtUtils;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +37,7 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
     private final AuthWhiteListProperties authWhiteListProperties;
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
+    private final JwtUtils jwtUtils;
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -55,13 +56,13 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
         }
 
         // 验证Token
-        Claims claims = JwtUtils.parseToken(token);
+        Claims claims = jwtUtils.parseToken(token);
         if (claims == null) {
             return unauthorized(exchange, "Token无效");
         }
 
         // 检查Token是否过期
-        if (!JwtUtils.validateToken(token)) {
+        if (!jwtUtils.validateToken(token)) {
             return unauthorized(exchange, "Token已过期");
         }
 
@@ -69,13 +70,13 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
         ServerHttpRequest.Builder requestBuilder = request.mutate();
 
         // 判断是管理员还是普通用户
-        if (JwtUtils.isAdminToken(token)) {
-            Long adminId = JwtUtils.getAdminId(token);
+        if (jwtUtils.isAdminToken(token)) {
+            Long adminId = jwtUtils.getAdminId(token);
             if (adminId != null) {
                 requestBuilder.header("X-Admin-Id", String.valueOf(adminId));
             }
         } else {
-            Long userId = JwtUtils.getUserId(token);
+            Long userId = jwtUtils.getUserId(token);
             if (userId != null) {
                 requestBuilder.header("X-User-Id", String.valueOf(userId));
             }

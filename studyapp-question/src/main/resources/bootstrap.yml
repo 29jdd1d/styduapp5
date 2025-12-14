@@ -12,3 +12,7 @@ spring:
         server-addr: localhost:8848
         namespace: public
         file-extension: yml
+        shared-configs:
+          - data-id: studyapp-jwt.yml
+            group: DEFAULT_GROUP
+            refresh: true

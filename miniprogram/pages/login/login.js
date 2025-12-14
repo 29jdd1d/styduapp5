@@ -76,19 +76,50 @@ Page({
         avatar: this.data.avatarUrl || '/images/default-avatar.png'
       })
 
-      // 保存登录信息
-      app.setLoginInfo(res.data.token, res.data.userInfo)
+      console.log('登录接口返回:', res)
+
+      // 检查返回数据
+      if (!res || !res.data) {
+        console.error('登录接口返回数据为空')
+        throw new Error('登录接口返回数据异常')
+      }
+
+      // 后端返回的 LoginResponse 直接包含字段，不是嵌套在 userInfo 中
+      const loginData = res.data
+      const token = loginData.token
+      
+      // 构造用户信息对象
+      const userInfo = {
+        userId: loginData.userId,
+        nickname: loginData.nickname,
+        avatar: loginData.avatar,
+        majorId: loginData.majorId,
+        majorName: loginData.majorName,
+        isNewUser: loginData.isNewUser,
+        hasMajor: loginData.hasMajor
+      }
+      
+      console.log('获取到的token:', token)
+      console.log('构造的userInfo:', userInfo)
+
+      if (!token) {
+        throw new Error('未获取到登录token')
+      }
+
+      app.setLoginInfo(token, userInfo)
 
       // 判断是否选择了专业
-      if (!res.data.userInfo.majorId) {
+      if (!userInfo.majorId || !loginData.hasMajor) {
+        console.log('用户未选择专业，跳转到专业选择页')
         wx.redirectTo({ url: '/pages/major/major' })
       } else {
+        console.log('用户已选择专业，跳转首页')
         this.navigateToIndex()
       }
     } catch (error) {
       console.error('登录失败:', error)
       wx.showToast({
-        title: '登录失败，请重试',
+        title: error.message || '登录失败，请重试',
         icon: 'none'
       })
     } finally {

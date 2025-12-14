@@ -72,7 +72,23 @@
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
         </dependency>
-
+<!--        common服务-->
+        <dependency>
+            <groupId>com.studyapp</groupId>
+            <artifactId>studyapp-common</artifactId>
+            <exclusions>
+                <!-- Gateway 必须排除 Web MVC，使用 WebFlux -->
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-web</artifactId>
+                </exclusion>
+                <!-- 排除 Spring MVC 相关的异常处理器 -->
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-validation</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>

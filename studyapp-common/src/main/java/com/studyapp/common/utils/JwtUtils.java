@@ -36,13 +36,7 @@ public class JwtUtils {
      */
     public static final String HEADER_NAME = "Authorization";
 
-    // 静态实例，用于静态方法访问
-    private static JwtUtils instance;
-
-    @PostConstruct
-    public void init() {
-        instance = this;
-    }
+    
 
     private SecretKey getSecretKey() {
         return Keys.hmacShaKeyFor(jwtConfig.getSecret().getBytes(StandardCharsets.UTF_8));
@@ -179,25 +173,4 @@ public class JwtUtils {
         return false;
     }
 
-    // ============ 静态方法（供Gateway等无法注入的场景使用） ============
-
-    public static Long getUserIdStatic(String token) {
-        return instance != null ? instance.getUserId(token) : null;
-    }
-
-    public static Long getAdminIdStatic(String token) {
-        return instance != null ? instance.getAdminId(token) : null;
-    }
-
-    public static boolean validateTokenStatic(String token) {
-        return instance != null && instance.validateToken(token);
-    }
-
-    public static boolean isAdminTokenStatic(String token) {
-        return instance != null && instance.isAdminToken(token);
-    }
-
-    public static Claims parseTokenStatic(String token) {
-        return instance != null ? instance.parseToken(token) : null;
-    }
 }

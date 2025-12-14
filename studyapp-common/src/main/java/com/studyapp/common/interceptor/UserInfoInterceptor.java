@@ -86,21 +86,21 @@ public class UserInfoInterceptor implements HandlerInterceptor {
             log.warn("jwtUtils为null，尝试静态方法");
             // 使用静态方法（备用方案）
             try {
-                if (JwtUtils.isAdminTokenStatic(token)) {
-                    Long parsedAdminId = JwtUtils.getAdminIdStatic(token);
+                if (jwtUtils.isAdminToken(token)) {
+                    Long parsedAdminId = jwtUtils.getAdminId(token);
                     if (parsedAdminId != null) {
                         UserContext.setAdminId(parsedAdminId);
-                        log.info("从Token(静态)解析到adminId: {}", parsedAdminId);
+                        log.info("从Token解析到adminId: {}", parsedAdminId);
                     }
                 } else {
-                    Long parsedUserId = JwtUtils.getUserIdStatic(token);
+                    Long parsedUserId = jwtUtils.getUserId(token);
                     if (parsedUserId != null) {
                         UserContext.setUserId(parsedUserId);
-                        log.info("从Token(静态)解析到userId: {}", parsedUserId);
+                        log.info("从Token解析到userId: {}", parsedUserId);
                     }
                 }
             } catch (Exception e) {
-                log.error("Token解析失败(静态): {}", e.getMessage(), e);
+                log.error("Token解析失败: {}", e.getMessage(), e);
             }
         }
     }

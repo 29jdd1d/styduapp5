@@ -24,6 +24,7 @@ Page({
 
   onShow() {
     if (app.checkLogin()) {
+      console.log('首页加载，当前Token:', app.globalData.token)
       this.loadData()
     }
   },

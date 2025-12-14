@@ -21,8 +21,8 @@ const userApi = {
   updateUserInfo: (data) => put('/user/update', data),
   // 获取专业列表
   getMajorList: () => get('/user/major/list'),
-  // 选择专业
-  selectMajor: (majorId) => post('/user/major/select', { majorId })
+  // 选择专业 - 参数需要作为 URL 查询参数
+  selectMajor: (majorId) => post(`/user/major/select?majorId=${majorId}`)
 }
 
 // ==================== 课程接口 ====================
@@ -114,28 +114,28 @@ const checkinApi = {
 // ==================== 社区接口 ====================
 const communityApi = {
   // 发布帖子
-  createPost: (data) => post('/post', data),
+  createPost: (data) => post('/community/post', data),
   // 获取帖子列表
-  getPostList: (params) => get('/post/list', params),
+  getPostList: (params) => get('/community/post/list', params),
   // 获取帖子详情
-  getPostDetail: (postId) => get(`/post/${postId}`),
+  getPostDetail: (postId) => get(`/community/post/${postId}`),
   // 删除帖子
-  deletePost: (postId) => del(`/post/${postId}`),
+  deletePost: (postId) => del(`/community/post/${postId}`),
   // 点赞帖子
-  likePost: (postId) => post(`/post/${postId}/like`),
+  likePost: (postId) => post(`/community/post/${postId}/like`),
   // 取消点赞帖子
-  unlikePost: (postId) => del(`/post/${postId}/like`),
+  unlikePost: (postId) => del(`/community/post/${postId}/like`),
   // 获取我的帖子
-  getMyPosts: (pageNum = 1, pageSize = 10) => get('/post/my', { pageNum, pageSize }),
+  getMyPosts: (pageNum = 1, pageSize = 10) => get('/community/post/my', { pageNum, pageSize }),
   
   // 发表评论
-  createComment: (data) => post('/comment', data),
+  createComment: (data) => post('/community/comment', data),
   // 获取评论列表
-  getCommentList: (postId, pageNum = 1, pageSize = 20) => get('/comment/list', { postId, pageNum, pageSize }),
+  getCommentList: (postId, pageNum = 1, pageSize = 20) => get('/community/comment/list', { postId, pageNum, pageSize }),
   // 删除评论
-  deleteComment: (commentId) => del(`/comment/${commentId}`),
+  deleteComment: (commentId) => del(`/community/comment/${commentId}`),
   // 点赞评论
-  likeComment: (commentId) => post(`/comment/${commentId}/like`),
+  likeComment: (commentId) => post(`/community/comment/${commentId}/like`),
   // 取消点赞评论
   unlikeComment: (commentId) => del(`/comment/${commentId}/like`)
 }
