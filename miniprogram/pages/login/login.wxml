@@ -1,0 +1,58 @@
+<!--pages/login/login.wxml-->
+<view class="login-page">
+  <!-- Logo区域 -->
+  <view class="logo-section">
+    <image class="logo" src="/images/logo.png" mode="aspectFit"></image>
+    <text class="app-name">考研学习</text>
+    <text class="app-slogan">助你金榜题名</text>
+  </view>
+
+  <!-- 登录区域 -->
+  <view class="login-section">
+    <!-- 头像昵称获取 -->
+    <view class="user-info-card" wx:if="{{!hasUserInfo}}">
+      <button class="avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+        <image class="avatar-preview" src="{{avatarUrl || '/images/default-avatar.png'}}" mode="aspectFill"></image>
+      </button>
+      <input 
+        type="nickname" 
+        class="nickname-input" 
+        placeholder="点击输入昵称"
+        value="{{nickname}}"
+        bindinput="onNicknameInput"
+        bindblur="onNicknameBlur"
+      />
+    </view>
+
+    <!-- 已有用户信息 -->
+    <view class="user-info-card" wx:else>
+      <image class="avatar-preview" src="{{avatarUrl}}" mode="aspectFill"></image>
+      <text class="nickname-text">{{nickname}}</text>
+    </view>
+
+    <!-- 登录按钮 -->
+    <button class="login-btn" bindtap="handleLogin" loading="{{loading}}">
+      微信授权登录
+    </button>
+
+    <!-- 协议 -->
+    <view class="agreement">
+      <checkbox-group bindchange="onAgreeChange">
+        <label class="agreement-label">
+          <checkbox value="agree" checked="{{agreed}}" color="#4A90D9"/>
+          <text class="agreement-text">
+            我已阅读并同意
+            <text class="link" bindtap="viewUserAgreement">《用户协议》</text>
+            和
+            <text class="link" bindtap="viewPrivacyPolicy">《隐私政策》</text>
+          </text>
+        </label>
+      </checkbox-group>
+    </view>
+  </view>
+
+  <!-- 底部说明 -->
+  <view class="footer">
+    <text class="footer-text">首次登录将自动创建账号</text>
+  </view>
+</view>

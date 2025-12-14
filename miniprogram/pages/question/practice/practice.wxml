@@ -1,0 +1,162 @@
+<!--pages/question/practice/practice.wxml-->
+<view class="practice-page">
+  <!-- 顶部进度 -->
+  <view class="progress-header">
+    <view class="progress-info">
+      <text class="current-num">{{currentIndex + 1}}</text>
+      <text class="total-num">/{{questions.length}}</text>
+    </view>
+    <view class="progress-bar">
+      <view class="progress-fill" style="width: {{(currentIndex + 1) / questions.length * 100}}%"></view>
+    </view>
+    <view class="timer" wx:if="{{showTimer}}">
+      <text class="timer-icon">⏱</text>
+      <text class="timer-text">{{timerText}}</text>
+    </view>
+  </view>
+
+  <!-- 题目内容 -->
+  <swiper 
+    class="question-swiper"
+    current="{{currentIndex}}"
+    bindchange="onSwiperChange"
+    duration="200"
+  >
+    <swiper-item wx:for="{{questions}}" wx:key="id">
+      <scroll-view class="question-scroll" scroll-y enhanced show-scrollbar="{{false}}">
+        <view class="question-container">
+          <!-- 题目类型和收藏 -->
+          <view class="question-meta">
+            <view class="type-tag tag-{{item.type}}">{{item.typeText}}</view>
+            <view class="difficulty-tag tag-difficulty-{{item.difficulty}}">{{item.difficultyText}}</view>
+            <view class="favorite-btn" bindtap="toggleFavorite" data-index="{{index}}">
+              <text class="favorite-icon {{item.isFavorite ? 'active' : ''}}">{{item.isFavorite ? '★' : '☆'}}</text>
+            </view>
+          </view>
+
+          <!-- 题目内容 -->
+          <view class="question-content">
+            <text class="content-text">{{item.content}}</text>
+          </view>
+
+          <!-- 选项列表 -->
+          <view class="options-list" wx:if="{{item.type === 1 || item.type === 2}}">
+            <view 
+              class="option-item {{item.userAnswer && item.userAnswer.includes(option.key) ? 'selected' : ''}} {{item.showAnswer && item.answer.includes(option.key) ? 'correct' : ''}} {{item.showAnswer && item.userAnswer && item.userAnswer.includes(option.key) && !item.answer.includes(option.key) ? 'wrong' : ''}}"
+              wx:for="{{item.options}}"
+              wx:for-item="option"
+              wx:key="key"
+              bindtap="selectOption"
+              data-qindex="{{index}}"
+              data-option="{{option.key}}"
+            >
+              <view class="option-key">{{option.key}}</view>
+              <text class="option-text">{{option.value}}</text>
+              <view class="option-status" wx:if="{{item.showAnswer}}">
+                <text wx:if="{{item.answer.includes(option.key)}}">✓</text>
+                <text wx:elif="{{item.userAnswer && item.userAnswer.includes(option.key)}}">✗</text>
+              </view>
+            </view>
+          </view>
+
+          <!-- 判断题选项 -->
+          <view class="judge-options" wx:if="{{item.type === 3}}">
+            <view 
+              class="judge-item {{item.userAnswer === '1' ? 'selected' : ''}} {{item.showAnswer && item.answer === '1' ? 'correct' : ''}} {{item.showAnswer && item.userAnswer === '1' && item.answer !== '1' ? 'wrong' : ''}}"
+              bindtap="selectJudge"
+              data-qindex="{{index}}"
+              data-answer="1"
+            >
+              <text class="judge-icon">✓</text>
+              <text class="judge-text">正确</text>
+            </view>
+            <view 
+              class="judge-item {{item.userAnswer === '0' ? 'selected' : ''}} {{item.showAnswer && item.answer === '0' ? 'correct' : ''}} {{item.showAnswer && item.userAnswer === '0' && item.answer !== '0' ? 'wrong' : ''}}"
+              bindtap="selectJudge"
+              data-qindex="{{index}}"
+              data-answer="0"
+            >
+              <text class="judge-icon">✗</text>
+              <text class="judge-text">错误</text>
+            </view>
+          </view>
+
+          <!-- 多选题提交按钮 -->
+          <view class="multi-submit" wx:if="{{item.type === 2 && !item.showAnswer}}">
+            <button class="btn btn-primary" size="mini" bindtap="confirmMultiAnswer" data-index="{{index}}">确认答案</button>
+          </view>
+
+          <!-- 答案解析 -->
+          <view class="answer-section" wx:if="{{item.showAnswer}}">
+            <view class="answer-header">
+              <text class="answer-result {{item.isCorrect ? 'correct' : 'wrong'}}">{{item.isCorrect ? '回答正确' : '回答错误'}}</text>
+            </view>
+            <view class="answer-box">
+              <view class="answer-row">
+                <text class="answer-label">正确答案：</text>
+                <text class="answer-value correct">{{item.answerText}}</text>
+              </view>
+              <view class="answer-row" wx:if="{{item.userAnswer}}">
+                <text class="answer-label">你的答案：</text>
+                <text class="answer-value {{item.isCorrect ? 'correct' : 'wrong'}}">{{item.userAnswerText}}</text>
+              </view>
+            </view>
+            <view class="analysis-box" wx:if="{{item.analysis}}">
+              <text class="analysis-title">解析：</text>
+              <text class="analysis-content">{{item.analysis}}</text>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+    </swiper-item>
+  </swiper>
+
+  <!-- 底部操作栏 -->
+  <view class="fixed-bottom action-bar">
+    <view class="nav-btns">
+      <button 
+        class="nav-btn" 
+        disabled="{{currentIndex === 0}}"
+        bindtap="prevQuestion"
+      >上一题</button>
+      <button 
+        class="nav-btn primary" 
+        wx:if="{{currentIndex < questions.length - 1}}"
+        bindtap="nextQuestion"
+      >下一题</button>
+      <button 
+        class="nav-btn primary" 
+        wx:else
+        bindtap="finishPractice"
+      >完成</button>
+    </view>
+    <view class="answer-sheet-btn" bindtap="showAnswerSheet">
+      <text class="sheet-icon">📋</text>
+      <text class="sheet-text">答题卡</text>
+    </view>
+  </view>
+
+  <!-- 答题卡弹窗 -->
+  <view class="answer-sheet-modal" wx:if="{{showSheet}}" bindtap="hideAnswerSheet">
+    <view class="sheet-content" catchtap="stopPropagation">
+      <view class="sheet-header">
+        <text class="sheet-title">答题卡</text>
+        <text class="sheet-close" bindtap="hideAnswerSheet">×</text>
+      </view>
+      <view class="sheet-stats">
+        <text class="stat-item">已答：{{answeredCount}}</text>
+        <text class="stat-item">未答：{{questions.length - answeredCount}}</text>
+        <text class="stat-item" wx:if="{{showAnswerStats}}">正确：{{correctCount}}</text>
+      </view>
+      <view class="sheet-grid">
+        <view 
+          class="sheet-item {{item.userAnswer ? 'answered' : ''}} {{item.showAnswer ? (item.isCorrect ? 'correct' : 'wrong') : ''}}"
+          wx:for="{{questions}}"
+          wx:key="id"
+          bindtap="jumpToQuestion"
+          data-index="{{index}}"
+        >{{index + 1}}</view>
+      </view>
+    </view>
+  </view>
+</view>

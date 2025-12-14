@@ -1,0 +1,67 @@
+<!--pages/major/major.wxml-->
+<view class="major-page">
+  <view class="header">
+    <text class="title">选择你的考研专业</text>
+    <text class="subtitle">选择专业后将为你推荐对应的课程和题库</text>
+  </view>
+
+  <!-- 搜索框 -->
+  <view class="search-box">
+    <icon type="search" size="16" color="#999"/>
+    <input 
+      class="search-input" 
+      placeholder="搜索专业名称或代码"
+      value="{{keyword}}"
+      bindinput="onSearchInput"
+    />
+    <icon wx:if="{{keyword}}" type="clear" size="16" bindtap="clearSearch"/>
+  </view>
+
+  <!-- 专业列表 -->
+  <scroll-view class="major-list" scroll-y enhanced show-scrollbar="{{false}}">
+    <!-- 按学科门类分组 -->
+    <block wx:for="{{groupedMajors}}" wx:key="category">
+      <view class="category-section">
+        <view class="category-header">
+          <text class="category-name">{{item.category}}</text>
+          <text class="category-count">{{item.majors.length}}个专业</text>
+        </view>
+        
+        <view class="major-items">
+          <view 
+            class="major-item {{selectedId === major.id ? 'active' : ''}}"
+            wx:for="{{item.majors}}" 
+            wx:for-item="major" 
+            wx:key="id"
+            bindtap="selectMajor"
+            data-id="{{major.id}}"
+          >
+            <image class="major-icon" src="{{major.icon || '/images/default-major.png'}}" mode="aspectFit"/>
+            <view class="major-info">
+              <text class="major-name">{{major.name}}</text>
+              <text class="major-code">专业代码：{{major.code}}</text>
+            </view>
+            <icon wx:if="{{selectedId === major.id}}" type="success" size="20" color="#4A90D9"/>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!-- 空状态 -->
+    <view class="empty" wx:if="{{!loading && groupedMajors.length === 0}}">
+      <image class="empty-icon" src="/images/empty.png" mode="aspectFit"/>
+      <text class="empty-text">暂无匹配的专业</text>
+    </view>
+  </scroll-view>
+
+  <!-- 底部确认按钮 -->
+  <view class="fixed-bottom">
+    <button 
+      class="btn btn-primary confirm-btn" 
+      disabled="{{!selectedId}}"
+      bindtap="confirmSelect"
+    >
+      确认选择
+    </button>
+  </view>
+</view>

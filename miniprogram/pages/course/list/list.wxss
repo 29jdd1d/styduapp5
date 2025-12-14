@@ -1,0 +1,137 @@
+/* pages/course/list/list.wxss */
+.course-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f5f5f5;
+}
+
+/* 搜索栏 */
+.search-bar {
+  padding: 20rpx;
+  background-color: #ffffff;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  background-color: #f5f5f5;
+  padding: 16rpx 24rpx;
+  border-radius: 40rpx;
+}
+
+.search-input {
+  flex: 1;
+  margin-left: 16rpx;
+  font-size: 28rpx;
+}
+
+/* 筛选栏 */
+.filter-scroll {
+  background-color: #ffffff;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.filter-list {
+  display: inline-flex;
+  padding: 20rpx;
+  white-space: nowrap;
+}
+
+.filter-item {
+  padding: 12rpx 32rpx;
+  margin-right: 20rpx;
+  font-size: 26rpx;
+  color: #666666;
+  background-color: #f5f5f5;
+  border-radius: 30rpx;
+  transition: all 0.2s;
+}
+
+.filter-item.active {
+  color: #ffffff;
+  background: linear-gradient(135deg, #4A90D9, #357ABD);
+}
+
+/* 课程列表 */
+.course-list {
+  flex: 1;
+  padding: 20rpx;
+}
+
+.course-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.course-card {
+  width: calc(50% - 10rpx);
+  background-color: #ffffff;
+  border-radius: 16rpx;
+  margin-bottom: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.05);
+}
+
+.cover-wrap {
+  position: relative;
+}
+
+.course-cover {
+  width: 100%;
+  height: 200rpx;
+}
+
+.free-tag {
+  position: absolute;
+  top: 16rpx;
+  left: 16rpx;
+  padding: 4rpx 16rpx;
+  background: linear-gradient(135deg, #07c160, #05a14a);
+  color: #ffffff;
+  font-size: 20rpx;
+  border-radius: 6rpx;
+}
+
+.course-content {
+  padding: 20rpx;
+}
+
+.course-title {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #333333;
+  line-height: 1.4;
+  height: 78rpx;
+}
+
+.teacher-info {
+  display: flex;
+  align-items: center;
+  margin-top: 16rpx;
+}
+
+.teacher-avatar {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+}
+
+.teacher-name {
+  margin-left: 12rpx;
+  font-size: 24rpx;
+  color: #666666;
+}
+
+.course-stats {
+  display: flex;
+  margin-top: 16rpx;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  font-size: 20rpx;
+  color: #999999;
+  margin-right: 16rpx;
+}

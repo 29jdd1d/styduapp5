@@ -1,0 +1,268 @@
+/* pages/checkin/checkin.wxss */
+.checkin-page {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding: 20rpx;
+}
+
+/* 统计卡片 */
+.stats-card {
+  background: linear-gradient(135deg, #4A90D9, #357ABD);
+  border-radius: 20rpx;
+  padding: 40rpx;
+  margin-bottom: 20rpx;
+}
+
+.stats-row {
+  display: flex;
+  justify-content: space-around;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-item .stat-value {
+  font-size: 52rpx;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.stat-item .stat-label {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 8rpx;
+}
+
+.stat-item.highlight {
+  position: relative;
+}
+
+.stat-item.highlight .stat-value {
+  font-size: 72rpx;
+}
+
+/* 日历 */
+.calendar-card {
+  margin-bottom: 20rpx;
+}
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30rpx;
+}
+
+.calendar-nav {
+  font-size: 40rpx;
+  color: #999999;
+  padding: 10rpx 20rpx;
+}
+
+.calendar-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333333;
+}
+
+.calendar-weekdays {
+  display: flex;
+  margin-bottom: 20rpx;
+}
+
+.calendar-weekdays text {
+  flex: 1;
+  text-align: center;
+  font-size: 26rpx;
+  color: #999999;
+}
+
+.calendar-days {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.calendar-day {
+  width: calc(100% / 7);
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.calendar-day .day-num {
+  font-size: 28rpx;
+  color: #333333;
+}
+
+.calendar-day.other-month .day-num {
+  color: #cccccc;
+}
+
+.calendar-day.today {
+  background-color: #f0f0f0;
+  border-radius: 50%;
+}
+
+.calendar-day.today .day-num {
+  color: #4A90D9;
+  font-weight: bold;
+}
+
+.calendar-day.checked {
+  background-color: rgba(74, 144, 217, 0.1);
+  border-radius: 50%;
+}
+
+.calendar-day.checked .day-num {
+  color: #4A90D9;
+}
+
+.check-dot {
+  width: 12rpx;
+  height: 12rpx;
+  background-color: #4A90D9;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 8rpx;
+}
+
+/* 打卡区域 */
+.checkin-section {
+  margin-bottom: 20rpx;
+}
+
+.section-header {
+  margin-bottom: 30rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333333;
+}
+
+/* 已打卡 */
+.checkin-done {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20rpx;
+}
+
+.done-icon {
+  font-size: 48rpx;
+  margin-right: 16rpx;
+}
+
+.done-text {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #07c160;
+}
+
+.checkin-info {
+  background-color: #f8f8f8;
+  border-radius: 12rpx;
+  padding: 20rpx;
+}
+
+.info-item {
+  display: block;
+  font-size: 26rpx;
+  color: #666666;
+  margin-bottom: 8rpx;
+}
+
+.info-item:last-child {
+  margin-bottom: 0;
+}
+
+/* 表单 */
+.form-item {
+  margin-bottom: 30rpx;
+}
+
+.form-label {
+  display: block;
+  font-size: 28rpx;
+  color: #333333;
+  margin-bottom: 16rpx;
+}
+
+.form-input {
+  width: 100%;
+  height: 88rpx;
+  background-color: #f8f8f8;
+  border-radius: 12rpx;
+  padding: 0 24rpx;
+  font-size: 28rpx;
+  box-sizing: border-box;
+}
+
+.form-textarea {
+  width: 100%;
+  height: 160rpx;
+  background-color: #f8f8f8;
+  border-radius: 12rpx;
+  padding: 20rpx 24rpx;
+  font-size: 28rpx;
+  box-sizing: border-box;
+}
+
+/* 心情选择 */
+.mood-list {
+  display: flex;
+  justify-content: space-around;
+}
+
+.mood-item {
+  font-size: 48rpx;
+  padding: 16rpx;
+  border-radius: 50%;
+  opacity: 0.5;
+  transition: all 0.2s;
+}
+
+.mood-item.active {
+  opacity: 1;
+  background-color: rgba(74, 144, 217, 0.1);
+  transform: scale(1.2);
+}
+
+/* 打卡按钮 */
+.checkin-btn {
+  margin-top: 20rpx;
+}
+
+/* 排行榜入口 */
+.ranking-entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.entry-left {
+  display: flex;
+  align-items: center;
+}
+
+.entry-icon {
+  font-size: 40rpx;
+  margin-right: 16rpx;
+}
+
+.entry-text {
+  font-size: 30rpx;
+  color: #333333;
+}
+
+.entry-arrow {
+  font-size: 36rpx;
+  color: #cccccc;
+}

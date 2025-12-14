@@ -1,0 +1,121 @@
+<!--pages/community/list/list.wxml-->
+<view class="community-page">
+  <!-- 顶部筛选栏 -->
+  <view class="filter-bar">
+    <scroll-view class="filter-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+      <view class="filter-list">
+        <view 
+          class="filter-item {{currentType === '' ? 'active' : ''}}"
+          bindtap="onTypeChange"
+          data-type=""
+        >全部</view>
+        <view 
+          class="filter-item {{currentType === '1' ? 'active' : ''}}"
+          bindtap="onTypeChange"
+          data-type="1"
+        >经验分享</view>
+        <view 
+          class="filter-item {{currentType === '2' ? 'active' : ''}}"
+          bindtap="onTypeChange"
+          data-type="2"
+        >问题求助</view>
+        <view 
+          class="filter-item {{currentType === '3' ? 'active' : ''}}"
+          bindtap="onTypeChange"
+          data-type="3"
+        >资料分享</view>
+        <view 
+          class="filter-item {{currentType === '4' ? 'active' : ''}}"
+          bindtap="onTypeChange"
+          data-type="4"
+        >闲聊灌水</view>
+      </view>
+    </scroll-view>
+    
+    <view class="sort-btn" bindtap="toggleSort">
+      <text>{{currentSort === 'new' ? '最新' : '最热'}}</text>
+      <text class="sort-icon">↓</text>
+    </view>
+  </view>
+
+  <!-- 帖子列表 -->
+  <scroll-view 
+    class="post-list" 
+    scroll-y 
+    enhanced 
+    show-scrollbar="{{false}}"
+    bindscrolltolower="loadMore"
+    refresher-enabled
+    bindrefresherrefresh="onRefresh"
+    refresher-triggered="{{isRefreshing}}"
+  >
+    <view 
+      class="post-card"
+      wx:for="{{posts}}"
+      wx:key="id"
+      bindtap="goToDetail"
+      data-id="{{item.id}}"
+    >
+      <!-- 用户信息 -->
+      <view class="post-header">
+        <image class="user-avatar" src="{{item.userAvatar || '/images/default-avatar.png'}}" mode="aspectFill"/>
+        <view class="user-info">
+          <text class="user-nickname">{{item.userNickname}}</text>
+          <text class="post-time">{{item.createTimeStr}}</text>
+        </view>
+        <view class="type-tag tag-{{item.type}}">{{item.typeText}}</view>
+      </view>
+
+      <!-- 帖子内容 -->
+      <text class="post-title">{{item.title}}</text>
+      <text class="post-content text-ellipsis-2">{{item.content}}</text>
+
+      <!-- 图片预览 -->
+      <view class="post-images" wx:if="{{item.images && item.images.length > 0}}">
+        <image 
+          wx:for="{{item.images}}"
+          wx:for-item="img"
+          wx:key="*this"
+          wx:if="{{index < 3}}"
+          class="post-image {{item.images.length === 1 ? 'single' : ''}}"
+          src="{{img}}"
+          mode="aspectFill"
+        />
+        <view class="image-count" wx:if="{{item.images.length > 3}}">+{{item.images.length - 3}}</view>
+      </view>
+
+      <!-- 互动数据 -->
+      <view class="post-footer">
+        <view class="stat-item">
+          <text class="stat-icon">👁</text>
+          <text class="stat-num">{{item.viewCount || 0}}</text>
+        </view>
+        <view class="stat-item" catchtap="toggleLike" data-id="{{item.id}}" data-index="{{index}}">
+          <text class="stat-icon {{item.isLiked ? 'liked' : ''}}">{{item.isLiked ? '❤️' : '🤍'}}</text>
+          <text class="stat-num">{{item.likeCount || 0}}</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-icon">💬</text>
+          <text class="stat-num">{{item.commentCount || 0}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty" wx:if="{{!loading && posts.length === 0}}">
+      <image class="empty-icon" src="/images/empty.png" mode="aspectFit"/>
+      <text class="empty-text">暂无帖子</text>
+    </view>
+
+    <!-- 加载更多 -->
+    <view class="load-more" wx:if="{{posts.length > 0}}">
+      <text wx:if="{{hasMore}}">加载中...</text>
+      <text wx:else>没有更多了</text>
+    </view>
+  </scroll-view>
+
+  <!-- 发布按钮 -->
+  <view class="publish-btn" bindtap="goToPublish">
+    <text class="publish-icon">+</text>
+  </view>
+</view>

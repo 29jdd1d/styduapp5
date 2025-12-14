@@ -1,0 +1,62 @@
+<!--pages/checkin/ranking/ranking.wxml-->
+<view class="ranking-page">
+  <!-- Tab切换 -->
+  <view class="tab-bar">
+    <view 
+      class="tab-item {{activeTab === 'streak' ? 'active' : ''}}"
+      bindtap="switchTab"
+      data-tab="streak"
+    >连续打卡榜</view>
+    <view 
+      class="tab-item {{activeTab === 'total' ? 'active' : ''}}"
+      bindtap="switchTab"
+      data-tab="total"
+    >累计打卡榜</view>
+  </view>
+
+  <!-- 我的排名 -->
+  <view class="my-ranking card" wx:if="{{myRanking}}">
+    <view class="my-rank-num">{{myRanking.rank || '--'}}</view>
+    <image class="my-avatar" src="{{myRanking.avatar || '/images/default-avatar.png'}}" mode="aspectFill"/>
+    <view class="my-info">
+      <text class="my-nickname">{{myRanking.nickname}}</text>
+      <text class="my-days">{{activeTab === 'streak' ? myRanking.streakDays : myRanking.totalDays}}天</text>
+    </view>
+    <text class="my-label">我的排名</text>
+  </view>
+
+  <!-- 排行榜列表 -->
+  <scroll-view 
+    class="ranking-list" 
+    scroll-y 
+    enhanced 
+    show-scrollbar="{{false}}"
+  >
+    <view 
+      class="ranking-item {{index < 3 ? 'top-' + (index + 1) : ''}}"
+      wx:for="{{rankingList}}"
+      wx:key="userId"
+    >
+      <view class="rank-num">
+        <text wx:if="{{index >= 3}}">{{index + 1}}</text>
+        <text wx:elif="{{index === 0}}" class="medal">🥇</text>
+        <text wx:elif="{{index === 1}}" class="medal">🥈</text>
+        <text wx:elif="{{index === 2}}" class="medal">🥉</text>
+      </view>
+      <image class="user-avatar" src="{{item.avatar || '/images/default-avatar.png'}}" mode="aspectFill"/>
+      <view class="user-info">
+        <text class="user-nickname">{{item.nickname}}</text>
+        <text class="user-major" wx:if="{{item.majorName}}">{{item.majorName}}</text>
+      </view>
+      <view class="rank-days">
+        <text class="days-num">{{activeTab === 'streak' ? item.streakDays : item.totalDays}}</text>
+        <text class="days-unit">天</text>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty" wx:if="{{!loading && rankingList.length === 0}}">
+      <text class="empty-text">暂无排行数据</text>
+    </view>
+  </scroll-view>
+</view>

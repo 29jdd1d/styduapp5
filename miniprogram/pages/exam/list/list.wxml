@@ -1,0 +1,122 @@
+<!--pages/exam/list/list.wxml-->
+<view class="exam-page">
+  <!-- 顶部统计 -->
+  <view class="stats-header">
+    <view class="stats-bg"></view>
+    <view class="stats-content">
+      <view class="stats-item">
+        <text class="stats-num">{{stats.totalExams || 0}}</text>
+        <text class="stats-label">总考试</text>
+      </view>
+      <view class="stats-divider"></view>
+      <view class="stats-item">
+        <text class="stats-num">{{stats.completedExams || 0}}</text>
+        <text class="stats-label">已完成</text>
+      </view>
+      <view class="stats-divider"></view>
+      <view class="stats-item">
+        <text class="stats-num">{{stats.avgScore || 0}}</text>
+        <text class="stats-label">平均分</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 标签筛选 -->
+  <view class="tab-bar">
+    <view 
+      class="tab-item {{currentTab === 'all' ? 'active' : ''}}"
+      bindtap="switchTab"
+      data-tab="all"
+    >全部考试</view>
+    <view 
+      class="tab-item {{currentTab === 'pending' ? 'active' : ''}}"
+      bindtap="switchTab"
+      data-tab="pending"
+    >待考试</view>
+    <view 
+      class="tab-item {{currentTab === 'completed' ? 'active' : ''}}"
+      bindtap="switchTab"
+      data-tab="completed"
+    >已完成</view>
+  </view>
+
+  <!-- 考试列表 -->
+  <scroll-view 
+    class="exam-list" 
+    scroll-y 
+    enhanced 
+    show-scrollbar="{{false}}"
+    bindscrolltolower="loadMore"
+    refresher-enabled
+    bindrefresherrefresh="onRefresh"
+    refresher-triggered="{{isRefreshing}}"
+  >
+    <view 
+      class="exam-card"
+      wx:for="{{exams}}"
+      wx:key="id"
+      bindtap="goToExam"
+      data-exam="{{item}}"
+    >
+      <view class="exam-header">
+        <text class="exam-title">{{item.title}}</text>
+        <view class="exam-status status-{{item.statusCode}}">{{item.statusText}}</view>
+      </view>
+
+      <view class="exam-info">
+        <view class="info-item">
+          <text class="info-icon">📝</text>
+          <text class="info-text">{{item.questionCount}}道题</text>
+        </view>
+        <view class="info-item">
+          <text class="info-icon">⏱</text>
+          <text class="info-text">{{item.duration}}分钟</text>
+        </view>
+        <view class="info-item">
+          <text class="info-icon">📊</text>
+          <text class="info-text">满分{{item.totalScore}}分</text>
+        </view>
+      </view>
+
+      <view class="exam-time">
+        <text class="time-label">考试时间：</text>
+        <text class="time-value">{{item.startTimeStr}} - {{item.endTimeStr}}</text>
+      </view>
+
+      <!-- 已完成显示成绩 -->
+      <view class="exam-result" wx:if="{{item.myScore !== undefined && item.myScore !== null}}">
+        <view class="result-item">
+          <text class="result-label">我的成绩</text>
+          <text class="result-score {{item.myScore >= item.passScore ? 'pass' : 'fail'}}">{{item.myScore}}分</text>
+        </view>
+        <view class="result-item">
+          <text class="result-label">用时</text>
+          <text class="result-value">{{item.usedTimeStr}}</text>
+        </view>
+        <view class="result-item">
+          <text class="result-label">排名</text>
+          <text class="result-value">{{item.rank || '-'}}</text>
+        </view>
+      </view>
+
+      <view class="exam-action">
+        <text class="action-btn" wx:if="{{item.statusCode === 'pending'}}">开始考试</text>
+        <text class="action-btn" wx:elif="{{item.statusCode === 'doing'}}">继续考试</text>
+        <text class="action-btn secondary" wx:elif="{{item.statusCode === 'completed'}}">查看详情</text>
+        <text class="action-btn disabled" wx:else>{{item.statusText}}</text>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty" wx:if="{{!loading && exams.length === 0}}">
+      <image class="empty-icon" src="/images/empty.png" mode="aspectFit"/>
+      <text class="empty-text">暂无考试</text>
+    </view>
+
+    <!-- 加载更多 -->
+    <view class="load-more" wx:if="{{exams.length > 0}}">
+      <text wx:if="{{hasMore}}">加载中...</text>
+      <text wx:else>没有更多了</text>
+    </view>
+  </scroll-view>
+</view>

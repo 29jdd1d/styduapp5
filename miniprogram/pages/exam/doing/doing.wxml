@@ -1,0 +1,152 @@
+<!--pages/exam/doing/doing.wxml-->
+<view class="doing-page">
+  <!-- 顶部计时器 -->
+  <view class="timer-bar">
+    <view class="timer-left">
+      <text class="timer-label">剩余时间</text>
+      <text class="timer-value {{remainTime < 300 ? 'warning' : ''}}">{{remainTimeStr}}</text>
+    </view>
+    <view class="timer-right">
+      <text class="progress-text">{{currentIndex + 1}}/{{questions.length}}</text>
+    </view>
+  </view>
+
+  <!-- 答题区域 -->
+  <swiper 
+    class="question-swiper"
+    current="{{currentIndex}}"
+    bindchange="onSwiperChange"
+    duration="300"
+  >
+    <swiper-item wx:for="{{questions}}" wx:key="id">
+      <scroll-view class="question-scroll" scroll-y enhanced show-scrollbar="{{false}}">
+        <view class="question-card">
+          <!-- 题目类型 -->
+          <view class="question-header">
+            <view class="question-type">{{item.typeText}}</view>
+            <view class="question-score">{{item.score}}分</view>
+          </view>
+
+          <!-- 题目内容 -->
+          <view class="question-content">
+            <text class="question-index">{{index + 1}}.</text>
+            <text class="question-text">{{item.content}}</text>
+          </view>
+
+          <!-- 题目图片 -->
+          <image 
+            class="question-image" 
+            wx:if="{{item.image}}" 
+            src="{{item.image}}" 
+            mode="widthFix"
+            bindtap="previewImage"
+            data-url="{{item.image}}"
+          />
+
+          <!-- 选项 -->
+          <view class="options-list" wx:if="{{item.type === 1 || item.type === 2}}">
+            <view 
+              class="option-item {{item.userAnswer && item.userAnswer.indexOf(option.key) > -1 ? 'selected' : ''}}"
+              wx:for="{{item.options}}"
+              wx:for-item="option"
+              wx:key="key"
+              bindtap="selectOption"
+              data-qindex="{{index}}"
+              data-key="{{option.key}}"
+            >
+              <view class="option-key">{{option.key}}</view>
+              <text class="option-text">{{option.value}}</text>
+            </view>
+          </view>
+
+          <!-- 判断题 -->
+          <view class="judge-list" wx:if="{{item.type === 3}}">
+            <view 
+              class="judge-item {{item.userAnswer === 'true' ? 'selected' : ''}}"
+              bindtap="selectJudge"
+              data-qindex="{{index}}"
+              data-value="true"
+            >
+              <text class="judge-icon">✓</text>
+              <text class="judge-text">正确</text>
+            </view>
+            <view 
+              class="judge-item {{item.userAnswer === 'false' ? 'selected' : ''}}"
+              bindtap="selectJudge"
+              data-qindex="{{index}}"
+              data-value="false"
+            >
+              <text class="judge-icon">✗</text>
+              <text class="judge-text">错误</text>
+            </view>
+          </view>
+
+          <!-- 填空题/简答题 -->
+          <view class="input-area" wx:if="{{item.type === 4 || item.type === 5}}">
+            <textarea 
+              class="answer-input"
+              placeholder="请输入您的答案..."
+              value="{{item.userAnswer}}"
+              bindinput="onInputAnswer"
+              data-qindex="{{index}}"
+              auto-height
+              maxlength="2000"
+            />
+          </view>
+        </view>
+      </scroll-view>
+    </swiper-item>
+  </swiper>
+
+  <!-- 底部导航 -->
+  <view class="bottom-bar">
+    <view class="nav-btn {{currentIndex === 0 ? 'disabled' : ''}}" bindtap="prevQuestion">
+      上一题
+    </view>
+    <view class="card-btn" bindtap="showAnswerCard">
+      答题卡
+    </view>
+    <view 
+      class="nav-btn {{currentIndex === questions.length - 1 ? 'submit' : ''}}" 
+      bindtap="{{currentIndex === questions.length - 1 ? 'confirmSubmit' : 'nextQuestion'}}"
+    >
+      {{currentIndex === questions.length - 1 ? '交卷' : '下一题'}}
+    </view>
+  </view>
+
+  <!-- 答题卡弹窗 -->
+  <view class="answer-card-mask" wx:if="{{showCard}}" bindtap="hideAnswerCard"></view>
+  <view class="answer-card-popup {{showCard ? 'show' : ''}}">
+    <view class="popup-header">
+      <text class="popup-title">答题卡</text>
+      <view class="close-btn" bindtap="hideAnswerCard">×</view>
+    </view>
+    
+    <view class="card-stats">
+      <view class="stat-item">
+        <text class="stat-num">{{answeredCount}}</text>
+        <text class="stat-label">已答</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-num">{{questions.length - answeredCount}}</text>
+        <text class="stat-label">未答</text>
+      </view>
+    </view>
+
+    <scroll-view class="card-grid-scroll" scroll-y enhanced show-scrollbar="{{false}}">
+      <view class="card-grid">
+        <view 
+          class="card-item {{item.userAnswer ? 'answered' : ''}} {{currentIndex === index ? 'current' : ''}}"
+          wx:for="{{questions}}"
+          wx:key="id"
+          bindtap="jumpToQuestion"
+          data-index="{{index}}"
+        >{{index + 1}}</view>
+      </view>
+    </scroll-view>
+
+    <view class="popup-footer">
+      <view class="submit-btn" bindtap="confirmSubmit">交卷</view>
+    </view>
+  </view>
+</view>

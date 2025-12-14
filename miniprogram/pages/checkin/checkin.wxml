@@ -1,0 +1,116 @@
+<!--pages/checkin/checkin.wxml-->
+<view class="checkin-page">
+  <!-- 打卡统计卡片 -->
+  <view class="stats-card">
+    <view class="stats-row">
+      <view class="stat-item">
+        <text class="stat-value">{{stats.totalDays || 0}}</text>
+        <text class="stat-label">累计打卡</text>
+      </view>
+      <view class="stat-item highlight">
+        <text class="stat-value">{{stats.streakDays || 0}}</text>
+        <text class="stat-label">连续打卡</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{stats.maxStreakDays || 0}}</text>
+        <text class="stat-label">最长连续</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 日历 -->
+  <view class="calendar-card card">
+    <view class="calendar-header">
+      <view class="calendar-nav" bindtap="prevMonth">‹</view>
+      <text class="calendar-title">{{currentYear}}年{{currentMonth}}月</text>
+      <view class="calendar-nav" bindtap="nextMonth">›</view>
+    </view>
+    
+    <view class="calendar-weekdays">
+      <text wx:for="{{weekdays}}" wx:key="*this">{{item}}</text>
+    </view>
+    
+    <view class="calendar-days">
+      <view 
+        class="calendar-day {{item.isCurrentMonth ? '' : 'other-month'}} {{item.isToday ? 'today' : ''}} {{item.checked ? 'checked' : ''}}"
+        wx:for="{{calendarDays}}"
+        wx:key="date"
+      >
+        <text class="day-num">{{item.day}}</text>
+        <view class="check-dot" wx:if="{{item.checked}}"></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 今日打卡 -->
+  <view class="checkin-section card">
+    <view class="section-header">
+      <text class="section-title">今日打卡</text>
+    </view>
+    
+    <view wx:if="{{todayCheckin}}">
+      <view class="checkin-done">
+        <text class="done-icon">✅</text>
+        <text class="done-text">今日已打卡</text>
+      </view>
+      <view class="checkin-info">
+        <text class="info-item">学习时长：{{todayCheckin.duration}}分钟</text>
+        <text class="info-item" wx:if="{{todayCheckin.content}}">学习内容：{{todayCheckin.content}}</text>
+      </view>
+    </view>
+    
+    <view wx:else>
+      <!-- 学习时长 -->
+      <view class="form-item">
+        <text class="form-label">学习时长（分钟）</text>
+        <input 
+          type="number" 
+          class="form-input" 
+          placeholder="请输入今日学习时长"
+          value="{{duration}}"
+          bindinput="onDurationInput"
+        />
+      </view>
+      
+      <!-- 学习内容 -->
+      <view class="form-item">
+        <text class="form-label">学习内容（选填）</text>
+        <textarea 
+          class="form-textarea" 
+          placeholder="记录一下今天学了什么..."
+          value="{{content}}"
+          bindinput="onContentInput"
+          maxlength="200"
+        />
+      </view>
+
+      <!-- 心情选择 -->
+      <view class="form-item">
+        <text class="form-label">今日心情</text>
+        <view class="mood-list">
+          <view 
+            class="mood-item {{mood === index + 1 ? 'active' : ''}}"
+            wx:for="{{moods}}"
+            wx:key="*this"
+            bindtap="selectMood"
+            data-mood="{{index + 1}}"
+          >{{item}}</view>
+        </view>
+      </view>
+
+      <!-- 打卡按钮 -->
+      <button class="btn btn-primary checkin-btn" bindtap="doCheckin" loading="{{loading}}">
+        立即打卡
+      </button>
+    </view>
+  </view>
+
+  <!-- 排行榜入口 -->
+  <view class="ranking-entry card" bindtap="goToRanking">
+    <view class="entry-left">
+      <text class="entry-icon">🏆</text>
+      <text class="entry-text">打卡排行榜</text>
+    </view>
+    <text class="entry-arrow">›</text>
+  </view>
+</view>

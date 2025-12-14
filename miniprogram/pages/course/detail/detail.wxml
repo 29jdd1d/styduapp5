@@ -1,0 +1,111 @@
+<!--pages/course/detail/detail.wxml-->
+<view class="detail-page">
+  <!-- 课程封面 -->
+  <view class="cover-section">
+    <image class="cover-image" src="{{course.cover || '/images/default-cover.png'}}" mode="aspectFill"/>
+    <view class="cover-mask"></view>
+    <view class="cover-info">
+      <text class="course-title">{{course.title}}</text>
+      <view class="course-meta">
+        <view class="meta-item">
+          <text class="meta-value">{{course.chapterCount}}</text>
+          <text class="meta-label">章节</text>
+        </view>
+        <view class="meta-item">
+          <text class="meta-value">{{course.videoCount}}</text>
+          <text class="meta-label">视频</text>
+        </view>
+        <view class="meta-item">
+          <text class="meta-value">{{course.viewCount}}</text>
+          <text class="meta-label">学习人数</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- Tab切换 -->
+  <view class="tab-bar">
+    <view 
+      class="tab-item {{activeTab === 'intro' ? 'active' : ''}}"
+      bindtap="switchTab"
+      data-tab="intro"
+    >课程介绍</view>
+    <view 
+      class="tab-item {{activeTab === 'chapters' ? 'active' : ''}}"
+      bindtap="switchTab"
+      data-tab="chapters"
+    >课程目录</view>
+  </view>
+
+  <!-- 课程介绍 -->
+  <view class="tab-content" wx:if="{{activeTab === 'intro'}}">
+    <!-- 讲师信息 -->
+    <view class="teacher-card card">
+      <view class="teacher-header">
+        <image class="teacher-avatar" src="{{course.teacherAvatar || '/images/default-avatar.png'}}" mode="aspectFill"/>
+        <view class="teacher-info">
+          <text class="teacher-name">{{course.teacherName}}</text>
+          <text class="teacher-title">主讲老师</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 课程简介 -->
+    <view class="intro-card card">
+      <view class="card-title">课程简介</view>
+      <text class="intro-text">{{course.description || '暂无简介'}}</text>
+    </view>
+  </view>
+
+  <!-- 课程目录 -->
+  <view class="tab-content" wx:if="{{activeTab === 'chapters'}}">
+    <view class="chapter-list">
+      <view 
+        class="chapter-item"
+        wx:for="{{chapters}}"
+        wx:key="id"
+      >
+        <view class="chapter-header" bindtap="toggleChapter" data-index="{{index}}">
+          <text class="chapter-title">{{item.title}}</text>
+          <text class="chapter-count">{{item.videos.length}}个视频</text>
+          <text class="chapter-arrow {{item.expanded ? 'expanded' : ''}}">›</text>
+        </view>
+        
+        <view class="video-list" wx:if="{{item.expanded}}">
+          <view 
+            class="video-item {{video.id === currentVideoId ? 'playing' : ''}}"
+            wx:for="{{item.videos}}"
+            wx:for-item="video"
+            wx:key="id"
+            bindtap="playVideo"
+            data-video="{{video}}"
+          >
+            <view class="video-info">
+              <text class="video-index">{{index + 1}}</text>
+              <text class="video-title">{{video.title}}</text>
+            </view>
+            <view class="video-meta">
+              <text class="video-duration">{{video.durationStr}}</text>
+              <view class="try-tag" wx:if="{{video.isTry && !course.isFree}}">试看</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty" wx:if="{{chapters.length === 0}}">
+      <text class="empty-text">暂无课程内容</text>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="fixed-bottom action-bar">
+    <view class="progress-info" wx:if="{{progress}}">
+      <text class="progress-text">学习进度：{{progress.percent}}%</text>
+    </view>
+    <button class="btn btn-primary start-btn" bindtap="startLearning">
+      {{progress ? '继续学习' : '开始学习'}}
+    </button>
+  </view>
+</view>

@@ -1,0 +1,59 @@
+<!--pages/question/wrong/wrong.wxml-->
+<view class="wrong-page">
+  <!-- 统计信息 -->
+  <view class="stats-header">
+    <view class="stat-item">
+      <text class="stat-value">{{wrongList.length}}</text>
+      <text class="stat-label">错题总数</text>
+    </view>
+  </view>
+
+  <!-- 错题列表 -->
+  <scroll-view 
+    class="wrong-list" 
+    scroll-y 
+    enhanced 
+    show-scrollbar="{{false}}"
+    refresher-enabled
+    bindrefresherrefresh="onRefresh"
+    refresher-triggered="{{isRefreshing}}"
+  >
+    <view 
+      class="question-card"
+      wx:for="{{wrongList}}"
+      wx:key="id"
+      bindtap="goToDetail"
+      data-question="{{item.question}}"
+    >
+      <view class="question-header">
+        <view class="type-tag tag-{{item.question.type}}">{{item.question.typeText}}</view>
+        <view class="wrong-count">错{{item.wrongCount}}次</view>
+      </view>
+      <text class="question-content text-ellipsis-2">{{item.question.content}}</text>
+      <view class="question-footer">
+        <text class="wrong-time">最近错误：{{item.lastWrongTimeStr}}</text>
+        <view class="remove-btn" catchtap="removeWrong" data-id="{{item.questionId}}">移除</view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty" wx:if="{{!loading && wrongList.length === 0}}">
+      <image class="empty-icon" src="/images/empty.png" mode="aspectFit"/>
+      <text class="empty-text">暂无错题</text>
+      <text class="empty-desc">做对的题不会记录到错题本哦</text>
+    </view>
+
+    <!-- 加载更多 -->
+    <view class="load-more" wx:if="{{wrongList.length > 0}}">
+      <text wx:if="{{hasMore}}">加载中...</text>
+      <text wx:else>没有更多了</text>
+    </view>
+  </scroll-view>
+
+  <!-- 底部按钮 -->
+  <view class="fixed-bottom" wx:if="{{wrongList.length > 0}}">
+    <button class="btn btn-primary" bindtap="startPractice">
+      开始练习错题 ({{wrongList.length}})
+    </button>
+  </view>
+</view>

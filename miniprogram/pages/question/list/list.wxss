@@ -1,0 +1,93 @@
+/* pages/question/list/list.wxss */
+.list-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f5f5f5;
+  padding-bottom: 140rpx;
+}
+
+/* 筛选栏 */
+.filter-bar {
+  display: flex;
+  background-color: #ffffff;
+  padding: 20rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.filter-item {
+  padding: 12rpx 30rpx;
+  margin-right: 20rpx;
+  font-size: 26rpx;
+  color: #666666;
+  background-color: #f5f5f5;
+  border-radius: 30rpx;
+}
+
+.filter-item.active {
+  color: #ffffff;
+  background: linear-gradient(135deg, #4A90D9, #357ABD);
+}
+
+/* 题目列表 */
+.question-list {
+  flex: 1;
+  padding: 20rpx;
+}
+
+.question-card {
+  background-color: #ffffff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.05);
+}
+
+.question-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.question-type {
+  padding: 4rpx 16rpx;
+  font-size: 22rpx;
+  border-radius: 6rpx;
+  margin-right: 16rpx;
+}
+
+.tag-1 { background-color: #e8f4fd; color: #4A90D9; }  /* 单选 */
+.tag-2 { background-color: #e8f8e8; color: #07c160; }  /* 多选 */
+.tag-3 { background-color: #fff8e8; color: #ff976a; }  /* 判断 */
+.tag-4 { background-color: #f0f0f0; color: #666666; }  /* 填空 */
+.tag-5 { background-color: #fff0f0; color: #ee0a24; }  /* 简答 */
+
+.question-difficulty {
+  padding: 4rpx 16rpx;
+  font-size: 22rpx;
+  border-radius: 6rpx;
+}
+
+.tag-difficulty-1 { background-color: #e8f8e8; color: #07c160; }  /* 简单 */
+.tag-difficulty-2 { background-color: #fff8e8; color: #ff976a; }  /* 中等 */
+.tag-difficulty-3 { background-color: #fff0f0; color: #ee0a24; }  /* 困难 */
+
+.question-content {
+  font-size: 30rpx;
+  color: #333333;
+  line-height: 1.6;
+}
+
+.question-footer {
+  display: flex;
+  margin-top: 20rpx;
+  padding-top: 16rpx;
+  border-top: 1rpx solid #f5f5f5;
+}
+
+.question-source,
+.question-year {
+  font-size: 24rpx;
+  color: #999999;
+  margin-right: 30rpx;
+}

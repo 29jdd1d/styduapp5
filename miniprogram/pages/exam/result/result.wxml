@@ -1,0 +1,138 @@
+<!--pages/exam/result/result.wxml-->
+<view class="result-page">
+  <!-- 成绩卡片 -->
+  <view class="score-card">
+    <view class="score-bg"></view>
+    <view class="score-content">
+      <view class="score-circle {{result.passed ? 'pass' : 'fail'}}">
+        <text class="score-num">{{result.score}}</text>
+        <text class="score-unit">分</text>
+      </view>
+      <view class="score-status">
+        <text class="status-icon">{{result.passed ? '🎉' : '💪'}}</text>
+        <text class="status-text">{{result.passed ? '恭喜通过' : '继续加油'}}</text>
+      </view>
+      <view class="score-detail">
+        <view class="detail-item">
+          <text class="detail-label">满分</text>
+          <text class="detail-value">{{result.totalScore}}分</text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">及格线</text>
+          <text class="detail-value">{{result.passScore}}分</text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">用时</text>
+          <text class="detail-value">{{result.usedTimeStr}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 答题统计 -->
+  <view class="stats-section">
+    <view class="section-header">
+      <text class="section-title">答题统计</text>
+    </view>
+    <view class="stats-grid">
+      <view class="stat-card correct">
+        <text class="stat-num">{{result.correctCount}}</text>
+        <text class="stat-label">答对</text>
+      </view>
+      <view class="stat-card wrong">
+        <text class="stat-num">{{result.wrongCount}}</text>
+        <text class="stat-label">答错</text>
+      </view>
+      <view class="stat-card unanswered">
+        <text class="stat-num">{{result.unansweredCount}}</text>
+        <text class="stat-label">未答</text>
+      </view>
+      <view class="stat-card rate">
+        <text class="stat-num">{{result.accuracy}}%</text>
+        <text class="stat-label">正确率</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 题目详情 -->
+  <view class="detail-section">
+    <view class="section-header">
+      <text class="section-title">题目详情</text>
+      <view class="filter-tabs">
+        <text 
+          class="filter-tab {{filter === 'all' ? 'active' : ''}}"
+          bindtap="setFilter"
+          data-filter="all"
+        >全部</text>
+        <text 
+          class="filter-tab {{filter === 'wrong' ? 'active' : ''}}"
+          bindtap="setFilter"
+          data-filter="wrong"
+        >错题</text>
+      </view>
+    </view>
+
+    <view class="question-list">
+      <view 
+        class="question-item"
+        wx:for="{{filteredQuestions}}"
+        wx:key="id"
+        bindtap="toggleQuestion"
+        data-index="{{index}}"
+      >
+        <view class="question-header">
+          <view class="question-num">第{{item.index}}题</view>
+          <view class="question-type">{{item.typeText}}</view>
+          <view class="question-status {{item.isCorrect ? 'correct' : 'wrong'}}">
+            {{item.isCorrect ? '✓ 正确' : '✗ 错误'}}
+          </view>
+        </view>
+
+        <view class="question-brief">{{item.content}}</view>
+
+        <view class="question-detail" wx:if="{{item.expanded}}">
+          <!-- 选项 -->
+          <view class="options-list" wx:if="{{item.options.length > 0}}">
+            <view 
+              class="option-item {{option.key === item.answer ? 'correct' : ''}} {{option.key === item.userAnswer && option.key !== item.answer ? 'wrong' : ''}}"
+              wx:for="{{item.options}}"
+              wx:for-item="option"
+              wx:key="key"
+            >
+              <view class="option-key">{{option.key}}</view>
+              <text class="option-text">{{option.value}}</text>
+            </view>
+          </view>
+
+          <view class="answer-info">
+            <view class="answer-row">
+              <text class="answer-label">我的答案：</text>
+              <text class="answer-value {{item.isCorrect ? 'correct' : 'wrong'}}">{{item.userAnswer || '未作答'}}</text>
+            </view>
+            <view class="answer-row">
+              <text class="answer-label">正确答案：</text>
+              <text class="answer-value correct">{{item.answer}}</text>
+            </view>
+          </view>
+
+          <view class="analysis" wx:if="{{item.analysis}}">
+            <text class="analysis-label">解析：</text>
+            <text class="analysis-text">{{item.analysis}}</text>
+          </view>
+        </view>
+
+        <view class="expand-icon">{{item.expanded ? '收起' : '展开'}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="bottom-bar">
+    <view class="btn-item" bindtap="goBack">
+      <text>返回列表</text>
+    </view>
+    <view class="btn-item primary" bindtap="reviewWrong" wx:if="{{result.wrongCount > 0}}">
+      <text>复习错题</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,85 @@
+<!--pages/course/video/video.wxml-->
+<view class="video-page">
+  <!-- 视频播放器 -->
+  <view class="video-container">
+    <video
+      id="videoPlayer"
+      class="video-player"
+      src="{{videoUrl}}"
+      title="{{currentVideo.title}}"
+      autoplay
+      show-center-play-btn
+      show-fullscreen-btn
+      enable-progress-gesture
+      enable-play-gesture
+      bindtimeupdate="onTimeUpdate"
+      bindended="onVideoEnded"
+      binderror="onVideoError"
+      bindpause="onVideoPause"
+      initial-time="{{initialTime}}"
+    ></video>
+  </view>
+
+  <!-- 视频信息 -->
+  <view class="video-info card">
+    <text class="video-title">{{currentVideo.title}}</text>
+    <view class="video-meta">
+      <text class="meta-item">时长：{{currentVideo.durationStr}}</text>
+      <text class="meta-item">观看进度：{{progressPercent}}%</text>
+    </view>
+  </view>
+
+  <!-- 章节列表 -->
+  <view class="chapter-section">
+    <view class="section-header">
+      <text class="section-title">课程目录</text>
+    </view>
+    
+    <scroll-view class="chapter-scroll" scroll-y enhanced show-scrollbar="{{false}}">
+      <view class="chapter-list">
+        <view 
+          class="chapter-item"
+          wx:for="{{chapters}}"
+          wx:key="id"
+        >
+          <view class="chapter-header" bindtap="toggleChapter" data-index="{{index}}">
+            <text class="chapter-title">{{item.title}}</text>
+            <text class="chapter-arrow {{item.expanded ? 'expanded' : ''}}">›</text>
+          </view>
+          
+          <view class="video-list" wx:if="{{item.expanded}}">
+            <view 
+              class="video-item {{video.id === currentVideo.id ? 'playing' : ''}}"
+              wx:for="{{item.videos}}"
+              wx:for-item="video"
+              wx:key="id"
+              bindtap="switchVideo"
+              data-video="{{video}}"
+            >
+              <view class="video-status">
+                <text class="status-icon" wx:if="{{video.id === currentVideo.id}}">▶</text>
+                <text class="status-index" wx:else>{{index + 1}}</text>
+              </view>
+              <text class="video-name text-ellipsis">{{video.title}}</text>
+              <text class="video-duration">{{video.durationStr}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 上一节/下一节 -->
+  <view class="nav-buttons fixed-bottom">
+    <button 
+      class="nav-btn prev-btn" 
+      disabled="{{!hasPrev}}"
+      bindtap="playPrev"
+    >上一节</button>
+    <button 
+      class="nav-btn next-btn" 
+      disabled="{{!hasNext}}"
+      bindtap="playNext"
+    >下一节</button>
+  </view>
+</view>

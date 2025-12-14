@@ -1,0 +1,166 @@
+<!--pages/index/index.wxml-->
+<view class="index-page">
+  <!-- 顶部用户信息区域 -->
+  <view class="header-section">
+    <view class="user-info" bindtap="goToProfile">
+      <image class="avatar" src="{{userInfo.avatar || '/images/default-avatar.png'}}" mode="aspectFill"/>
+      <view class="info">
+        <text class="nickname">{{userInfo.nickname || '未登录'}}</text>
+        <text class="major">{{userInfo.majorName || '请选择专业'}}</text>
+      </view>
+    </view>
+    
+    <!-- 考研倒计时 -->
+    <view class="countdown-box" wx:if="{{countdown}}">
+      <text class="countdown-label">距离{{examYear}}考研</text>
+      <view class="countdown-num">
+        <text class="num">{{countdown.days}}</text>
+        <text class="unit">天</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 学习统计 -->
+  <view class="stats-card card">
+    <view class="stats-item">
+      <text class="stats-num">{{userInfo.studyDays || 0}}</text>
+      <text class="stats-label">学习天数</text>
+    </view>
+    <view class="stats-divider"></view>
+    <view class="stats-item">
+      <text class="stats-num">{{userInfo.totalQuestions || 0}}</text>
+      <text class="stats-label">做题数量</text>
+    </view>
+    <view class="stats-divider"></view>
+    <view class="stats-item">
+      <text class="stats-num">{{checkinStats.streakDays || 0}}</text>
+      <text class="stats-label">连续打卡</text>
+    </view>
+  </view>
+
+  <!-- 今日打卡 -->
+  <view class="checkin-card card" bindtap="goToCheckin">
+    <view class="checkin-left">
+      <image class="checkin-icon" src="/images/checkin-icon.png" mode="aspectFit"/>
+      <view class="checkin-info">
+        <text class="checkin-title">{{todayCheckin ? '今日已打卡' : '今日未打卡'}}</text>
+        <text class="checkin-desc">{{todayCheckin ? '继续保持，加油！' : '坚持打卡，养成习惯'}}</text>
+      </view>
+    </view>
+    <view class="checkin-btn {{todayCheckin ? 'done' : ''}}">
+      {{todayCheckin ? '已完成' : '去打卡'}}
+    </view>
+  </view>
+
+  <!-- 快捷入口 -->
+  <view class="quick-entry card">
+    <view class="entry-item" bindtap="goToPage" data-url="/pages/course/list/list">
+      <view class="entry-icon-wrap bg-blue">
+        <image class="entry-icon" src="/images/icon-course.png" mode="aspectFit"/>
+      </view>
+      <text class="entry-text">视频课程</text>
+    </view>
+    <view class="entry-item" bindtap="goToPage" data-url="/pages/question/category/category">
+      <view class="entry-icon-wrap bg-green">
+        <image class="entry-icon" src="/images/icon-question.png" mode="aspectFit"/>
+      </view>
+      <text class="entry-text">刷题练习</text>
+    </view>
+    <view class="entry-item" bindtap="goToPage" data-url="/pages/exam/list/list">
+      <view class="entry-icon-wrap bg-orange">
+        <image class="entry-icon" src="/images/icon-exam.png" mode="aspectFit"/>
+      </view>
+      <text class="entry-text">模拟考试</text>
+    </view>
+    <view class="entry-item" bindtap="goToPage" data-url="/pages/question/wrong/wrong">
+      <view class="entry-icon-wrap bg-red">
+        <image class="entry-icon" src="/images/icon-wrong.png" mode="aspectFit"/>
+      </view>
+      <text class="entry-text">错题本</text>
+    </view>
+  </view>
+
+  <!-- 推荐课程 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">推荐课程</text>
+      <text class="section-more" bindtap="goToPage" data-url="/pages/course/list/list">查看更多 ›</text>
+    </view>
+    
+    <scroll-view class="course-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+      <view class="course-list">
+        <view 
+          class="course-item" 
+          wx:for="{{recommendCourses}}" 
+          wx:key="id"
+          bindtap="goToCourseDetail"
+          data-id="{{item.id}}"
+        >
+          <image class="course-cover" src="{{item.cover || '/images/default-cover.png'}}" mode="aspectFill"/>
+          <view class="course-info">
+            <text class="course-title text-ellipsis">{{item.title}}</text>
+            <text class="course-teacher">{{item.teacherName}}</text>
+            <view class="course-meta">
+              <text class="course-count">{{item.chapterCount}}章节</text>
+              <text class="course-views">{{item.viewCount}}人学习</text>
+            </view>
+          </view>
+        </view>
+        
+        <view class="course-item empty-placeholder" wx:if="{{recommendCourses.length === 0}}">
+          <text class="placeholder-text">暂无推荐课程</text>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 热门帖子 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">热门讨论</text>
+      <text class="section-more" bindtap="goToPage" data-url="/pages/community/list/list">查看更多 ›</text>
+    </view>
+    
+    <view class="post-list">
+      <view 
+        class="post-item card"
+        wx:for="{{hotPosts}}"
+        wx:key="id"
+        bindtap="goToPostDetail"
+        data-id="{{item.id}}"
+      >
+        <view class="post-header">
+          <image class="post-avatar" src="{{item.userAvatar || '/images/default-avatar.png'}}" mode="aspectFill"/>
+          <view class="post-user">
+            <text class="post-nickname">{{item.userNickname}}</text>
+            <text class="post-time">{{item.createTimeStr}}</text>
+          </view>
+          <view class="post-type-tag">{{item.typeText}}</view>
+        </view>
+        <text class="post-title">{{item.title}}</text>
+        <text class="post-content text-ellipsis-2">{{item.content}}</text>
+        <view class="post-footer">
+          <view class="post-stat">
+            <text class="iconfont">👁</text>
+            <text>{{item.viewCount}}</text>
+          </view>
+          <view class="post-stat">
+            <text class="iconfont">👍</text>
+            <text>{{item.likeCount}}</text>
+          </view>
+          <view class="post-stat">
+            <text class="iconfont">💬</text>
+            <text>{{item.commentCount}}</text>
+          </view>
+        </view>
+      </view>
+      
+      <view class="empty" wx:if="{{hotPosts.length === 0}}">
+        <text class="empty-text">暂无热门帖子</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部间距 -->
+  <view style="height: 30rpx;"></view>
+</view>

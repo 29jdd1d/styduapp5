@@ -1,0 +1,282 @@
+/* pages/course/detail/detail.wxss */
+.detail-page {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding-bottom: 140rpx;
+}
+
+/* 封面区域 */
+.cover-section {
+  position: relative;
+  height: 420rpx;
+}
+
+.cover-image {
+  width: 100%;
+  height: 100%;
+}
+
+.cover-mask {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 200rpx;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+}
+
+.cover-info {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 30rpx;
+  color: #ffffff;
+}
+
+.course-title {
+  display: block;
+  font-size: 36rpx;
+  font-weight: bold;
+  line-height: 1.4;
+}
+
+.course-meta {
+  display: flex;
+  margin-top: 20rpx;
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 60rpx;
+}
+
+.meta-value {
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.meta-label {
+  font-size: 22rpx;
+  opacity: 0.8;
+  margin-top: 4rpx;
+}
+
+/* Tab栏 */
+.tab-bar {
+  display: flex;
+  background-color: #ffffff;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.tab-item {
+  flex: 1;
+  text-align: center;
+  padding: 30rpx 0;
+  font-size: 30rpx;
+  color: #666666;
+  position: relative;
+}
+
+.tab-item.active {
+  color: #4A90D9;
+  font-weight: 500;
+}
+
+.tab-item.active::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 60rpx;
+  height: 6rpx;
+  background-color: #4A90D9;
+  border-radius: 3rpx;
+}
+
+/* Tab内容 */
+.tab-content {
+  padding: 20rpx;
+}
+
+/* 讲师卡片 */
+.teacher-card {
+  margin-bottom: 20rpx;
+}
+
+.teacher-header {
+  display: flex;
+  align-items: center;
+}
+
+.teacher-avatar {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+}
+
+.teacher-info {
+  margin-left: 24rpx;
+}
+
+.teacher-name {
+  display: block;
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #333333;
+}
+
+.teacher-title {
+  display: block;
+  font-size: 24rpx;
+  color: #999999;
+  margin-top: 8rpx;
+}
+
+/* 课程简介 */
+.intro-card .card-title {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #333333;
+  margin-bottom: 20rpx;
+}
+
+.intro-text {
+  font-size: 28rpx;
+  color: #666666;
+  line-height: 1.8;
+}
+
+/* 章节列表 */
+.chapter-list {
+  background-color: #ffffff;
+  border-radius: 16rpx;
+  overflow: hidden;
+}
+
+.chapter-item {
+  border-bottom: 1rpx solid #f5f5f5;
+}
+
+.chapter-item:last-child {
+  border-bottom: none;
+}
+
+.chapter-header {
+  display: flex;
+  align-items: center;
+  padding: 30rpx;
+  background-color: #fafafa;
+}
+
+.chapter-title {
+  flex: 1;
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #333333;
+}
+
+.chapter-count {
+  font-size: 24rpx;
+  color: #999999;
+  margin-right: 16rpx;
+}
+
+.chapter-arrow {
+  font-size: 36rpx;
+  color: #cccccc;
+  transition: transform 0.2s;
+}
+
+.chapter-arrow.expanded {
+  transform: rotate(90deg);
+}
+
+/* 视频列表 */
+.video-list {
+  background-color: #ffffff;
+}
+
+.video-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx 30rpx;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+
+.video-item:last-child {
+  border-bottom: none;
+}
+
+.video-item.playing {
+  background-color: rgba(74, 144, 217, 0.05);
+}
+
+.video-item.playing .video-title {
+  color: #4A90D9;
+}
+
+.video-info {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.video-index {
+  width: 48rpx;
+  height: 48rpx;
+  line-height: 48rpx;
+  text-align: center;
+  background-color: #f5f5f5;
+  border-radius: 50%;
+  font-size: 24rpx;
+  color: #999999;
+  margin-right: 20rpx;
+}
+
+.video-title {
+  font-size: 28rpx;
+  color: #333333;
+}
+
+.video-meta {
+  display: flex;
+  align-items: center;
+}
+
+.video-duration {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.try-tag {
+  margin-left: 16rpx;
+  padding: 4rpx 12rpx;
+  background-color: rgba(74, 144, 217, 0.1);
+  color: #4A90D9;
+  font-size: 20rpx;
+  border-radius: 4rpx;
+}
+
+/* 底部操作栏 */
+.action-bar {
+  display: flex;
+  align-items: center;
+}
+
+.progress-info {
+  margin-right: 30rpx;
+}
+
+.progress-text {
+  font-size: 26rpx;
+  color: #666666;
+}
+
+.start-btn {
+  flex: 1;
+}

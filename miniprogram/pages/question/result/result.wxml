@@ -1,0 +1,57 @@
+<!--pages/question/result/result.wxml-->
+<view class="result-page">
+  <!-- 结果卡片 -->
+  <view class="result-card">
+    <view class="result-icon {{isPass ? 'pass' : 'fail'}}">
+      {{isPass ? '🎉' : '😢'}}
+    </view>
+    <text class="result-title">{{isPass ? '太棒了！' : '继续努力！'}}</text>
+    
+    <!-- 得分展示 -->
+    <view class="score-section">
+      <view class="score-circle">
+        <text class="score-value">{{correctRate}}</text>
+        <text class="score-unit">%</text>
+      </view>
+      <text class="score-label">正确率</text>
+    </view>
+
+    <!-- 统计数据 -->
+    <view class="stats-row">
+      <view class="stat-item">
+        <text class="stat-value">{{total}}</text>
+        <text class="stat-label">总题数</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value correct">{{correct}}</text>
+        <text class="stat-label">答对</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value wrong">{{wrong}}</text>
+        <text class="stat-label">答错</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{timeStr}}</text>
+        <text class="stat-label">用时</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-section">
+    <button class="btn btn-outline" bindtap="viewWrong" wx:if="{{wrong > 0}}">
+      查看错题 ({{wrong}})
+    </button>
+    <button class="btn btn-primary" bindtap="continuePractice">
+      继续刷题
+    </button>
+    <button class="btn btn-gray" bindtap="goBack">
+      返回题库
+    </button>
+  </view>
+
+  <!-- 鼓励语 -->
+  <view class="encourage-text">
+    <text>{{encourageText}}</text>
+  </view>
+</view>

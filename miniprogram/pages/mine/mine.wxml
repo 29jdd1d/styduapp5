@@ -1,0 +1,103 @@
+<!--pages/mine/mine.wxml-->
+<view class="mine-page">
+  <!-- 用户信息卡片 -->
+  <view class="user-card">
+    <view class="user-bg"></view>
+    <view class="user-content" wx:if="{{userInfo}}">
+      <image class="user-avatar" src="{{userInfo.avatar || '/images/default-avatar.png'}}" mode="aspectFill"/>
+      <view class="user-info">
+        <text class="user-name">{{userInfo.nickname || '考研学子'}}</text>
+        <view class="user-major" wx:if="{{userInfo.majorName}}">
+          <text class="major-icon">🎓</text>
+          <text class="major-name">{{userInfo.majorName}}</text>
+        </view>
+      </view>
+      <view class="edit-btn" bindtap="goToProfile">
+        <text>编辑资料</text>
+      </view>
+    </view>
+    <view class="user-content login-tip" wx:else bindtap="goToLogin">
+      <image class="user-avatar" src="/images/default-avatar.png" mode="aspectFill"/>
+      <text class="login-text">点击登录</text>
+    </view>
+  </view>
+
+  <!-- 学习数据 -->
+  <view class="stats-card">
+    <view class="stats-title">学习数据</view>
+    <view class="stats-grid">
+      <view class="stat-item" bindtap="goToRecords" data-type="study">
+        <text class="stat-num">{{stats.studyDays || 0}}</text>
+        <text class="stat-label">学习天数</text>
+      </view>
+      <view class="stat-item" bindtap="goToRecords" data-type="practice">
+        <text class="stat-num">{{stats.practiceCount || 0}}</text>
+        <text class="stat-label">练习题数</text>
+      </view>
+      <view class="stat-item" bindtap="goToRecords" data-type="checkin">
+        <text class="stat-num">{{stats.checkinDays || 0}}</text>
+        <text class="stat-label">打卡天数</text>
+      </view>
+      <view class="stat-item" bindtap="goToRecords" data-type="video">
+        <text class="stat-num">{{stats.videoHours || 0}}</text>
+        <text class="stat-label">视频时长(h)</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 功能菜单 -->
+  <view class="menu-card">
+    <view class="menu-item" bindtap="goToPage" data-url="/pages/question/wrong/wrong">
+      <view class="menu-icon">📕</view>
+      <text class="menu-text">我的错题</text>
+      <text class="menu-badge" wx:if="{{wrongCount > 0}}">{{wrongCount}}</text>
+      <text class="menu-arrow">></text>
+    </view>
+    <view class="menu-item" bindtap="goToPage" data-url="/pages/question/favorite/favorite">
+      <view class="menu-icon">⭐</view>
+      <text class="menu-text">我的收藏</text>
+      <text class="menu-badge" wx:if="{{favoriteCount > 0}}">{{favoriteCount}}</text>
+      <text class="menu-arrow">></text>
+    </view>
+    <view class="menu-item" bindtap="goToRecords" data-type="course">
+      <view class="menu-icon">📚</view>
+      <text class="menu-text">学习记录</text>
+      <text class="menu-arrow">></text>
+    </view>
+    <view class="menu-item" bindtap="goToRecords" data-type="exam">
+      <view class="menu-icon">📝</view>
+      <text class="menu-text">考试记录</text>
+      <text class="menu-arrow">></text>
+    </view>
+  </view>
+
+  <view class="menu-card">
+    <view class="menu-item" bindtap="goToPage" data-url="/pages/checkin/ranking/ranking">
+      <view class="menu-icon">🏆</view>
+      <text class="menu-text">打卡排行</text>
+      <text class="menu-arrow">></text>
+    </view>
+    <view class="menu-item" bindtap="changeMajor">
+      <view class="menu-icon">🎯</view>
+      <text class="menu-text">切换专业</text>
+      <text class="menu-sub">{{userInfo.majorName || '未选择'}}</text>
+      <text class="menu-arrow">></text>
+    </view>
+    <view class="menu-item" bindtap="clearCache">
+      <view class="menu-icon">🧹</view>
+      <text class="menu-text">清除缓存</text>
+      <text class="menu-sub">{{cacheSize}}</text>
+      <text class="menu-arrow">></text>
+    </view>
+    <view class="menu-item" bindtap="showAbout">
+      <view class="menu-icon">ℹ️</view>
+      <text class="menu-text">关于我们</text>
+      <text class="menu-arrow">></text>
+    </view>
+  </view>
+
+  <!-- 退出登录 -->
+  <view class="logout-btn" wx:if="{{userInfo}}" bindtap="logout">
+    退出登录
+  </view>
+</view>

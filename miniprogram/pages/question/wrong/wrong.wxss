@@ -1,0 +1,102 @@
+/* pages/question/wrong/wrong.wxss */
+.wrong-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f5f5f5;
+  padding-bottom: 140rpx;
+}
+
+/* 统计头部 */
+.stats-header {
+  display: flex;
+  justify-content: center;
+  background: linear-gradient(135deg, #ee0a24, #c00820);
+  padding: 40rpx;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-value {
+  font-size: 56rpx;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.stat-label {
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 8rpx;
+}
+
+/* 错题列表 */
+.wrong-list {
+  flex: 1;
+  padding: 20rpx;
+}
+
+.question-card {
+  background-color: #ffffff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.05);
+}
+
+.question-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+}
+
+.type-tag {
+  padding: 4rpx 16rpx;
+  font-size: 22rpx;
+  border-radius: 6rpx;
+}
+
+.tag-1 { background-color: #e8f4fd; color: #4A90D9; }
+.tag-2 { background-color: #e8f8e8; color: #07c160; }
+.tag-3 { background-color: #fff8e8; color: #ff976a; }
+
+.wrong-count {
+  font-size: 24rpx;
+  color: #ee0a24;
+}
+
+.question-content {
+  font-size: 30rpx;
+  color: #333333;
+  line-height: 1.6;
+}
+
+.question-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20rpx;
+  padding-top: 16rpx;
+  border-top: 1rpx solid #f5f5f5;
+}
+
+.wrong-time {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.remove-btn {
+  font-size: 24rpx;
+  color: #4A90D9;
+  padding: 8rpx 20rpx;
+}
+
+.empty-desc {
+  font-size: 24rpx;
+  color: #cccccc;
+  margin-top: 16rpx;
+}

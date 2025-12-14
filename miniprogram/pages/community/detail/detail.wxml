@@ -1,0 +1,137 @@
+<!--pages/community/detail/detail.wxml-->
+<view class="detail-page">
+  <!-- 帖子内容 -->
+  <scroll-view 
+    class="content-scroll" 
+    scroll-y 
+    enhanced 
+    show-scrollbar="{{false}}"
+    bindscrolltolower="loadMoreComments"
+  >
+    <!-- 帖子主体 -->
+    <view class="post-detail">
+      <!-- 用户信息 -->
+      <view class="post-header">
+        <image class="user-avatar" src="{{post.userAvatar || '/images/default-avatar.png'}}" mode="aspectFill"/>
+        <view class="user-info">
+          <text class="user-nickname">{{post.userNickname}}</text>
+          <text class="post-time">{{post.createTimeStr}}</text>
+        </view>
+        <view class="type-tag tag-{{post.type}}">{{post.typeText}}</view>
+      </view>
+
+      <!-- 帖子标题 -->
+      <text class="post-title">{{post.title}}</text>
+
+      <!-- 帖子内容 -->
+      <view class="post-content">
+        <text>{{post.content}}</text>
+      </view>
+
+      <!-- 帖子图片 -->
+      <view class="post-images" wx:if="{{post.images && post.images.length > 0}}">
+        <image 
+          wx:for="{{post.images}}"
+          wx:key="*this"
+          class="post-image"
+          src="{{item}}"
+          mode="widthFix"
+          bindtap="previewImage"
+          data-current="{{item}}"
+        />
+      </view>
+
+      <!-- 互动数据 -->
+      <view class="post-stats">
+        <view class="stat-item">
+          <text class="stat-icon">👁</text>
+          <text class="stat-num">{{post.viewCount || 0}} 浏览</text>
+        </view>
+        <view class="stat-item" bindtap="toggleLike">
+          <text class="stat-icon {{post.isLiked ? 'liked' : ''}}">{{post.isLiked ? '❤️' : '🤍'}}</text>
+          <text class="stat-num">{{post.likeCount || 0}} 点赞</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-icon">💬</text>
+          <text class="stat-num">{{post.commentCount || 0}} 评论</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 评论区 -->
+    <view class="comment-section">
+      <view class="section-header">
+        <text class="section-title">评论 ({{comments.length}})</text>
+      </view>
+
+      <!-- 评论列表 -->
+      <view class="comment-list">
+        <view 
+          class="comment-item"
+          wx:for="{{comments}}"
+          wx:key="id"
+        >
+          <image class="comment-avatar" src="{{item.userAvatar || '/images/default-avatar.png'}}" mode="aspectFill"/>
+          <view class="comment-body">
+            <view class="comment-header">
+              <text class="comment-nickname">{{item.userNickname}}</text>
+              <text class="comment-time">{{item.createTimeStr}}</text>
+            </view>
+            <text class="comment-content">{{item.content}}</text>
+            
+            <!-- 回复 -->
+            <view class="reply-list" wx:if="{{item.replies && item.replies.length > 0}}">
+              <view 
+                class="reply-item"
+                wx:for="{{item.replies}}"
+                wx:for-item="reply"
+                wx:key="id"
+              >
+                <text class="reply-nickname">{{reply.userNickname}}</text>
+                <text class="reply-arrow" wx:if="{{reply.replyToNickname}}">回复</text>
+                <text class="reply-target" wx:if="{{reply.replyToNickname}}">{{reply.replyToNickname}}</text>
+                <text class="reply-content">：{{reply.content}}</text>
+              </view>
+            </view>
+
+            <view class="comment-actions">
+              <text class="action-btn" bindtap="replyComment" data-id="{{item.id}}" data-nickname="{{item.userNickname}}">回复</text>
+              <view class="like-btn" bindtap="likeComment" data-id="{{item.id}}" data-index="{{index}}">
+                <text>{{item.isLiked ? '❤️' : '🤍'}}</text>
+                <text>{{item.likeCount || 0}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <!-- 空状态 -->
+        <view class="empty-comment" wx:if="{{!loading && comments.length === 0}}">
+          <text>暂无评论，快来抢沙发吧~</text>
+        </view>
+
+        <!-- 加载更多 -->
+        <view class="load-more" wx:if="{{comments.length > 0}}">
+          <text wx:if="{{hasMore}}">加载中...</text>
+          <text wx:else>没有更多评论了</text>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 底部评论输入 -->
+  <view class="comment-input-bar">
+    <input 
+      class="comment-input"
+      placeholder="{{replyTo ? '回复 ' + replyTo.nickname : '写评论...'}}"
+      value="{{commentContent}}"
+      bindinput="onCommentInput"
+      confirm-type="send"
+      bindconfirm="submitComment"
+      focus="{{inputFocus}}"
+      bindblur="onInputBlur"
+    />
+    <view class="send-btn {{commentContent ? 'active' : ''}}" bindtap="submitComment">
+      发送
+    </view>
+  </view>
+</view>

@@ -1,0 +1,89 @@
+<!--pages/question/category/category.wxml-->
+<view class="category-page">
+  <!-- 顶部统计 -->
+  <view class="stats-header">
+    <view class="stat-item">
+      <text class="stat-value">{{totalQuestions}}</text>
+      <text class="stat-label">总题数</text>
+    </view>
+    <view class="stat-divider"></view>
+    <view class="stat-item">
+      <text class="stat-value">{{doneQuestions}}</text>
+      <text class="stat-label">已做</text>
+    </view>
+    <view class="stat-divider"></view>
+    <view class="stat-item">
+      <text class="stat-value">{{correctRate}}%</text>
+      <text class="stat-label">正确率</text>
+    </view>
+  </view>
+
+  <!-- 快捷入口 -->
+  <view class="quick-actions">
+    <view class="action-item" bindtap="startRandomPractice">
+      <view class="action-icon random">🎲</view>
+      <text class="action-text">随机刷题</text>
+    </view>
+    <view class="action-item" bindtap="goToWrong">
+      <view class="action-icon wrong">📝</view>
+      <text class="action-text">错题本</text>
+    </view>
+    <view class="action-item" bindtap="goToFavorite">
+      <view class="action-icon favorite">⭐</view>
+      <text class="action-text">收藏夹</text>
+    </view>
+    <view class="action-item" bindtap="goToExam">
+      <view class="action-icon exam">📋</view>
+      <text class="action-text">模拟考试</text>
+    </view>
+  </view>
+
+  <!-- 分类列表 -->
+  <view class="category-section">
+    <view class="section-header">
+      <text class="section-title">题目分类</text>
+    </view>
+    
+    <view class="category-list">
+      <view 
+        class="category-item"
+        wx:for="{{categories}}"
+        wx:key="id"
+        bindtap="goToCategory"
+        data-category="{{item}}"
+      >
+        <image class="category-icon" src="{{item.icon || '/images/default-category.png'}}" mode="aspectFit"/>
+        <view class="category-info">
+          <text class="category-name">{{item.name}}</text>
+          <text class="category-count">{{item.questionCount || 0}}题</text>
+        </view>
+        <text class="category-arrow">›</text>
+      </view>
+
+      <!-- 子分类展示 -->
+      <block wx:for="{{categories}}" wx:key="id" wx:for-item="parent">
+        <view 
+          class="sub-category-item"
+          wx:for="{{parent.children}}"
+          wx:key="id"
+          wx:if="{{parent.expanded}}"
+          bindtap="goToCategory"
+          data-category="{{item}}"
+        >
+          <view class="sub-icon">└</view>
+          <view class="category-info">
+            <text class="category-name">{{item.name}}</text>
+            <text class="category-count">{{item.questionCount || 0}}题</text>
+          </view>
+          <text class="category-arrow">›</text>
+        </view>
+      </block>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty" wx:if="{{!loading && categories.length === 0}}">
+      <image class="empty-icon" src="/images/empty.png" mode="aspectFit"/>
+      <text class="empty-text">暂无题目分类</text>
+    </view>
+  </view>
+</view>
